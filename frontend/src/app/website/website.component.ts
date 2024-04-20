@@ -13,15 +13,9 @@ export class WebsiteComponent {
   }
 
   addWebsite() {
-    try{
-      const checkurl = new URL(this.url);
-      this.websiteService.addWebsite(this.url).subscribe(() => {
-        this.url = '';
-      });
-    } catch {
-      console.log("error")
-    }
-
+    this.websiteService.addWebsite(this.url).subscribe(() => {
+      this.url = '';
+    });
   }
 
   ackCorrectWebsiteURL() {
