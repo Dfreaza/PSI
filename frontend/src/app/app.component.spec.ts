@@ -27,3 +27,18 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.content span')?.textContent).toContain('frontend app is running!');
   });
 });
+
+function expect(value: any): any {
+  return {
+    toBeTruthy: () => {
+      if (!value) {
+        throw new Error('Expected value to be truthy.');
+      }
+    },
+    toEqual: (expected: any) => {
+      if (value !== expected) {
+        throw new Error(`Expected value to equal ${expected}, but received ${value}.`);
+      }
+    }
+  };
+}

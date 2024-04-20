@@ -23,4 +23,8 @@ export class WebsiteComponent {
     }
 
   }
+
+  ackCorrectWebsiteURL() {
+    return this.url !== '' && new URL(this.url).hostname !== 'localhost';
+  }
 }
