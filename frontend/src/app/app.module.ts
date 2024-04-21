@@ -12,7 +12,6 @@ import { PageFormComponent } from './page-form/page-form.component';
   declarations: [
     AppComponent,
     WebsiteComponent,
-    PageFormComponent
   ],
   imports: [
     BrowserModule,

@@ -1,19 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WebsiteService } from '../website.service';
 
 @Component({
   selector: 'app-website',
   templateUrl: './website.component.html'
 })
-export class WebsiteComponent {
-  url: string;
+export class WebsiteComponent implements OnInit {
+  url: string = '';
+  pageUrls: string = '';
+  selectedWebsite: string = '';
+  websites: any[] = [];
 
-  constructor(private websiteService: WebsiteService) {
-    this.url = '';
+  constructor(private websiteService: WebsiteService) { }
+
+  ngOnInit() {
+    this.websiteService.getWebsites().subscribe((websites: any[]) => {
+      this.websites = websites;
+    });
   }
 
   addWebsite() {
-    try{
+    try {
       const checkurl = new URL(this.url);
       this.websiteService.addWebsite(this.url).subscribe(() => {
         this.url = '';
@@ -21,7 +28,17 @@ export class WebsiteComponent {
     } catch {
       console.log("error")
     }
+  }
 
+  addPages() {
+    try {
+      const pages = this.pageUrls.split(',').map(url => url.trim());
+      this.websiteService.addPagesToWebsite(this.selectedWebsite, pages).subscribe(() => {
+        this.pageUrls = '';
+      });
+    } catch {
+      console.log("error")
+    }
   }
 
   ackCorrectWebsiteURL() {

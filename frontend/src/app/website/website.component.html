@@ -2,3 +2,10 @@
 
 <input [(ngModel)]="url" placeholder="Enter website URL">
 <button (click)="addWebsite()">Add Website</button>
+
+<select [(ngModel)]="selectedWebsite">
+    <option *ngFor="let website of websites" [value]="website.url">{{ website.url }}</option>
+</select>
+
+<input [(ngModel)]="pageUrls" placeholder="Enter page URLs, separated by commas">
+<button (click)="addPages()">Add Pages</button>
