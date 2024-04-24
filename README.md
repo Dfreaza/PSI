@@ -21,4 +21,4 @@ Comados do mongo:
 
 -db.mycoll.find() (mostra os objetos na minha coleção)
 
-temos de ver como é que podemos apagar (talvez db.mycolldeleteMany())
+-db.mycolldeleteMany({}) para apagar todos
