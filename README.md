@@ -11,3 +11,14 @@ para correr abrir quatro terminais (o mongod e mongo tem de ser pela ordem):
 /PSI mongod 
 
 /PSI mongo
+
+Comados do mongo:
+-show dbs (myapp é a nossa)
+
+-use myapp (para escolher a base de dados)
+
+-show collections (mostra as tabelas que existem?? acho eu)
+
+-db.mycoll.find() (mostra os objetos na minha coleção)
+
+temos de ver como é que podemos apagar (talvez db.mycolldeleteMany())
