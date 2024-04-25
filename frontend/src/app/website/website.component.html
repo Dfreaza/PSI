@@ -1,11 +1,7 @@
-<h1>ola</h1>
+<h1>PSI_WEB_MASTER</h1>
 
-<input [(ngModel)]="url" placeholder="Enter website URL">
-<button (click)="addWebsite()">Add Website</button>
+<div class="center-content">
+    <input [(ngModel)]="url" placeholder="Enter website URL">
+    <button (click)="addWebsite()">Add Website</button>
+</div>
 
-<select [(ngModel)]="selectedWebsite">
-    <option *ngFor="let website of websites" [value]="website.url">{{ website.url }}</option>
-</select>
-
-<input [(ngModel)]="pageUrls" placeholder="Enter page URLs, separated by commas">
-<button (click)="addPages()">Add Pages</button>
