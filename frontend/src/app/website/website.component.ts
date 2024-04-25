@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsiteService } from '../website.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-website',
@@ -12,7 +13,7 @@ export class WebsiteComponent implements OnInit {
   selectedWebsite: string = '';
   websites: any[] = [];
 
-  constructor(private websiteService: WebsiteService) { }
+  constructor(private router: Router, private websiteService: WebsiteService) { }
 
   ngOnInit() {
     this.websiteService.getWebsites().subscribe((websites: any[]) => {
@@ -25,6 +26,7 @@ export class WebsiteComponent implements OnInit {
       const checkurl = new URL(this.url);
       this.websiteService.addWebsite(this.url).subscribe(() => {
         this.url = '';
+        this.router.navigate(['/add-page']);
       });
     } catch {
       console.log("error")

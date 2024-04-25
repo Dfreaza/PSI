@@ -9,7 +9,9 @@ export class WebsiteService {
   addPagesToWebsite(selectedWebsite: string, pages: string[]) {
     return this.http.post(`${this.getWebsite(selectedWebsite)}/addPages`, { url: selectedWebsite, pageUrls: pages });
   }
-  
+  addPageToWebsite(websiteId: string, pageUrl: string): Observable<any> {
+    return this.http.post(`http://localhost:3000/api/websites/${websiteId}/pages`, { url: pageUrl });
+  }
   constructor(private http: HttpClient) { }
 
   addWebsite(url: string) {
