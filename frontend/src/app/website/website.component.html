@@ -11,12 +11,16 @@
                 <tr>
                     <th>Website</th>
                     <th>Status</th>
+                    <th>Submission date</th>
+                    <th>Last appraisal date</th>
                 </tr>
             </thead>
             <tbody>
                 <tr  *ngFor="let website of websites">
                     <td>{{website.url}}</td>
-                    <td>{{website.Status}}</td>
+                    <td>{{website.status}}</td>
+                    <td>{{website.submissionDate}}</td>
+                    <td>{{website.appraisalDate}}</td>
                 </tr>
             </tbody>
         </table>
