@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { WebsiteService } from '../website.service';
 import { Location } from '@angular/common';
+import { IWebsite } from '../website';
+import { IPage } from '../page';
 
 
 
@@ -13,34 +15,30 @@ export class AddPageComponent {
 
   pageUrl: string = '';
   pageUrls: string = '';
-  currentWebsite: string;
+  currentWebsite: IWebsite | null;
 
+  ngOnInit() {
+    this.currentWebsite = this.websiteService.getCurrentWebsite();
+    console.log("AddPageComponent ngOnInit " + this.currentWebsite?.url);
+  }
 
   constructor(private location: Location, public websiteService: WebsiteService) { 
-    this.currentWebsite = '';
-    this.websiteService.getCurrentWebsite().subscribe(website => this.currentWebsite = website);  }
-
-  addPage() {
-    if (this.currentWebsite) {
-      console.log('currentWebsite está armazenando um valor:', this.currentWebsite);
-    } else {
-      console.log('currentWebsite não está armazenando um valor');
-    }
-    try {
-      const page = this.pageUrl.trim();
-      this.websiteService.addPageToWebsite(this.currentWebsite, page).subscribe(() => {
-        this.pageUrl = '';
-      });
-    } catch {
-      console.log("error")
-    }
+    this.currentWebsite = this.websiteService.getCurrentWebsite();
   }
+
+// Em AddPageComponent
+addPage(pageUrl: string) {
+  const page = { url: pageUrl } as IPage;
+  this.websiteService.addPageToWebsite(page).subscribe(updatedWebsite => {
+    console.log('Website updated', updatedWebsite);
+  });
+}
 
   goBack(): void {
     this.location.back();
   }
 
-
+/* 
   addPages() {
     try {
       const pages = this.pageUrls.split(',').map(url => url.trim());
@@ -50,5 +48,5 @@ export class AddPageComponent {
     } catch {
       console.log("error")
     }
-  }
+  } */
 }

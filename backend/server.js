@@ -17,39 +17,59 @@ const WebsiteSchema = new mongoose.Schema({
 
 const Website = mongoose.model('Website', WebsiteSchema);
 
+const PageSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true
+  },
+  url: {
+    type: String,
+    required: true
+  }
+});
+
+const Page = mongoose.model('Page', PageSchema);
+
 app.use(bodyParser.json());
 app.use(cors());
 
 app.post('/api/websites', (req, res) => {
   const website = new Website({ url: req.body.url, pages: req.body.pageUrls || [] });
   website.save()
-    .then(() => {
-      res.status(200).json("Website adicionado com sucesso!");
+    .then((savedWebsite) => {
+      res.status(200).json(savedWebsite);
     })
     .catch(err => {
       res.status(500).send(err);
     });
 });
 
-app.post('/api/websites/addPages', (req, res) => {
-  Website.findOne({ url: req.body.url })
-    .then(website => {
-      if (website) {
-        website.pages = [...website.pages, ...req.body.pageUrls];
-        website.save()
-          .then(() => {
-            res.status(200).json("Páginas adicionadas com sucesso!");
-          })
-          .catch(err => {
-            res.status(500).send(err);
-          });
-      } else {
-        res.status(404).send("Website not found");
+app.put('/api/websites/:WebsiteId', (req, res) => {
+  console.log(req.body.page); // Adicione esta linha
+  Website.findOne({ _id: req.params.WebsiteId })
+  .then(website => {
+    if (website) {
+      if (!website.pages) {
+        website.pages = [];
       }
-    })
-    .catch(err => {
-      res.status(500).send(err);
-    });
+      const page = new Page(req.body.page); // Crie uma nova instância do modelo Page
+      website.pages.push(page); // Adicione a instância ao array pages
+      website.save()
+        .then(() => {
+          res.status(200).json("Página adicionada com sucesso!");
+        })
+        .catch(err => {
+          console.log(err); // Adicione esta linha para ver o erro
+          res.status(500).send(err);
+        });
+    } else {
+      res.status(404).send("Website not found");
+    }
+  })
+  .catch(err => {
+    console.log(err); // Adicione esta linha para ver o erro
+    res.status(500).send(err);
+  });
 });
 
 app.get('/api/websites', (req, res) => {

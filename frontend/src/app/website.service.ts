@@ -2,35 +2,52 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { IWebsite } from './website';
+import { IPage } from './page';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsiteService {
 
-  private currentWebsite = new BehaviorSubject<string>('');
+  private currentWebsite = new BehaviorSubject<IWebsite | null>(null);
   currentWebsite$ = this.currentWebsite.asObservable();
+  private currentWebsiteValue: IWebsite | null = null;
 
-  changeCurrentWebsite(website: string) {
+  constructor(private http: HttpClient) {
+    this.currentWebsite$.subscribe(website => {
+      this.currentWebsiteValue = website;
+    });
+  }
+
+  changeCurrentWebsite(website: IWebsite) {
     this.currentWebsite.next(website);
   }
 
   getCurrentWebsite() {
-    return this.currentWebsite.asObservable();
+    return this.currentWebsiteValue;
   }
-
-  constructor(private http: HttpClient) { }
 
   addPagesToWebsite(selectedWebsite: string, pages: string[]) {
     return this.http.post(`${this.getWebsite(selectedWebsite)}/addPages`, { url: selectedWebsite, pageUrls: pages });
   }
-  addPageToWebsite(websiteId: string, pageUrl: string): Observable<any> {
-    return this.http.post(`http://localhost:3000/api/websites/${websiteId}/pages`, { url: pageUrl });
+
+  addPageToWebsite(page: IPage): Observable<IWebsite> {
+    return this.currentWebsite$.pipe(
+      take(1),
+      filter((website: IWebsite | null): website is IWebsite => website !== null),
+      switchMap((website: IWebsite) => {
+        website.pages.push(page);
+        return this.http.put<IWebsite>(`http://localhost:3000/api/websites/${website._id}`, { page });
+      })
+    );
   }
 
-  addWebsite(website: IWebsite) {
-    return this.http.post('http://localhost:3000/api/websites', website);
+  addWebsite(website: IWebsite): Observable<IWebsite>{
+    return this.http.post<IWebsite>('http://localhost:3000/api/websites', website);
   }
 
   getWebsites(): Observable<any[]> {

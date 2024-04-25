@@ -1,9 +1,9 @@
-<h2>Adiciona uma pagina ao Website {{currentWebsite}}</h2>
+<h2>Adiciona uma pagina ao Website {{currentWebsite?.url}}</h2>
 
 <div class="center-content">
     <input [(ngModel)]="pageUrl" placeholder="Enter page URL">
     <div class="buttons">
         <button (click)="goBack()">Go back</button>
-        <button (click)="addPage()">Add Page</button>
+        <button (click)="addPage(pageUrl)">Add Page</button>
     </div>
 </div>

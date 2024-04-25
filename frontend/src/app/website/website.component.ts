@@ -21,18 +21,16 @@ export class WebsiteComponent implements OnInit {
   }
 
   addWebsite(url: string) {
-    const newWebsite = { url: this.url, pages: [], status: '', submissionDate: new Date(), appraisalDate: new Date() };
-    try {
-      const checkurl = new URL(this.url);
-      this.websiteService.addWebsite(newWebsite).subscribe((website: any) => {
-        this.websites.push(website);
-        this.websiteService.changeCurrentWebsite(this.url);
-        this.router.navigate(['/add-page']);
-        this.url = '';
-      });
-    } catch {
-      console.log("error")
-    }
+    url = url.trim();
+    if (!url) { return; }
+    const website = { url: url } as IWebsite;
+    this.websiteService.addWebsite(website)
+      .subscribe((websiteFromServer: IWebsite) => {
+      this.websites.push(websiteFromServer);
+      this.websiteService.changeCurrentWebsite(websiteFromServer);
+      this.router.navigate(['/add-page']);
+    this.url = '';
+  });
   }
 
   ackCorrectWebsiteURL() {
