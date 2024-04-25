@@ -1,6 +1,6 @@
 # PSI
 
-Não sei se no primeiro user story é preciso verificar se o url é valido ou seja, começa com https ect
+Da user story 2 é preciso verificar do lado do cliente se a page é valida para o currentWebsite.url
 
 para correr abrir quatro terminais (o mongod e mongo tem de ser pela ordem):
 
