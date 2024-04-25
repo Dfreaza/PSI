@@ -10,6 +10,8 @@ mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, use
 const WebsiteSchema = new mongoose.Schema({
   url: String,
   pages: [String],
+  submissionDate: {type: Date, default: Date.now},
+  appraisalDate:{type: Date, default: Date.now},
   status: { type: String, default: 'Por avaliar' }
 });
 
