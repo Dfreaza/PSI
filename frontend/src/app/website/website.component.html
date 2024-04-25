@@ -1,7 +1,25 @@
 <h2>Adiciona um novo website</h2>
 
-<div class="center-content">
-    <input [(ngModel)]="url" placeholder="Enter website URL">
-    <button (click)="addWebsite()">Add Website</button>
-</div>
+    <div class="center-content">
+        <input [(ngModel)]="url" placeholder="Enter website URL">
+        <button (click)="addWebsite()">Add Website</button>
+    </div>
+
+    <div *ngIf="websites.length > 0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Website</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let website of websites">
+                    <td>{{website.url}}</td>
+                    <td>{{website.Status}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 

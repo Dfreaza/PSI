@@ -20,5 +20,6 @@ Comados do mongo:
 -show collections (mostra as tabelas que existem?? acho eu)
 
 -db.mycoll.find() (mostra os objetos na minha coleção)
+-db.websites.find() (mostra os websites)
 
 -db.mycolldeleteMany({}) para apagar todos
