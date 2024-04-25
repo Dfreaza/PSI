@@ -2,7 +2,7 @@
 
     <div class="center-content">
         <input [(ngModel)]="url" placeholder="Enter website URL">
-        <button (click)="addWebsite()">Add Website</button>
+        <button (click)="addWebsite(url)">Add Website</button>
     </div>
 
     <div *ngIf="websites.length > 0">

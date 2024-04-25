@@ -13,15 +13,22 @@ export class AddPageComponent {
 
   pageUrl: string = '';
   pageUrls: string = '';
-  selectedWebsite: string = '';
+  currentWebsite: string;
 
 
-  constructor(private location: Location, private websiteService: WebsiteService) { }
+  constructor(private location: Location, public websiteService: WebsiteService) { 
+    this.currentWebsite = '';
+    this.websiteService.getCurrentWebsite().subscribe(website => this.currentWebsite = website);  }
 
   addPage() {
+    if (this.currentWebsite) {
+      console.log('currentWebsite está armazenando um valor:', this.currentWebsite);
+    } else {
+      console.log('currentWebsite não está armazenando um valor');
+    }
     try {
       const page = this.pageUrl.trim();
-      this.websiteService.addPageToWebsite(this.selectedWebsite, page).subscribe(() => {
+      this.websiteService.addPageToWebsite(this.currentWebsite, page).subscribe(() => {
         this.pageUrl = '';
       });
     } catch {
@@ -37,7 +44,7 @@ export class AddPageComponent {
   addPages() {
     try {
       const pages = this.pageUrls.split(',').map(url => url.trim());
-      this.websiteService.addPagesToWebsite(this.selectedWebsite, pages).subscribe(() => {
+      this.websiteService.addPagesToWebsite(this.currentWebsite, pages).subscribe(() => {
         this.pageUrls = '';
       });
     } catch {
