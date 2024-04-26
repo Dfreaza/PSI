@@ -11,6 +11,8 @@ import { IWebsite } from '../website';
 export class WebsiteComponent implements OnInit {
   url: string = '';
   websites: IWebsite[] = [];
+  submissionOrder: boolean = true;
+  appraisalOrder: boolean = true;
 
   constructor(private router: Router, private websiteService: WebsiteService) { }
 
@@ -37,7 +39,24 @@ export class WebsiteComponent implements OnInit {
     return this.url !== '' && new URL(this.url).hostname !== 'localhost';
   }
 
-  sortSub(){
-    this.websites.sort((a, b) => a.url.length - b.url.length);
+  sortSub(ascendingOrder: boolean){
+
+    if(ascendingOrder){
+      this.websites.sort((a, b) => new Date(b.submissionDate).getTime() - new Date(a.submissionDate).getTime());
+    }
+    else{
+      this.websites.sort((a, b) => new Date(a.submissionDate).getTime() - new Date(b.submissionDate).getTime());
+    }
+    this.submissionOrder = !this.submissionOrder;
   }
+
+  sortAppr(ascendingOrder: boolean){
+    if(ascendingOrder){
+      this.websites.sort((a, b) => new Date(b.appraisalDate).getTime() - new Date(a.appraisalDate).getTime());
+    }
+    else{
+      this.websites.sort((a, b) => new Date(a.appraisalDate).getTime() - new Date(b.appraisalDate).getTime());
+    }
+    this.appraisalOrder = !this.appraisalOrder;
+  }  
 }
