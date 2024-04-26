@@ -36,4 +36,8 @@ export class WebsiteComponent implements OnInit {
   ackCorrectWebsiteURL() {
     return this.url !== '' && new URL(this.url).hostname !== 'localhost';
   }
+
+  sortSub(){
+    this.websites.sort((a, b) => a.url.length - b.url.length);
+  }
 }
