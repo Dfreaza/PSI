@@ -13,6 +13,7 @@ export class WebsiteComponent implements OnInit {
   websites: IWebsite[] = [];
   submissionOrder: boolean = true;
   appraisalOrder: boolean = true;
+  filter: string = 'Nenhum';
 
   constructor(private router: Router, private websiteService: WebsiteService) { }
 
@@ -58,5 +59,27 @@ export class WebsiteComponent implements OnInit {
       this.websites.sort((a, b) => new Date(a.appraisalDate).getTime() - new Date(b.appraisalDate).getTime());
     }
     this.appraisalOrder = !this.appraisalOrder;
+  }
+
+  filterStatus(filter: any){
+    let sites = this.websites;
+    
+    if(filter === "Por avaliar"){
+      sites = sites.filter( (a) => a.status === filter);
+    }
+    else if(filter === "Em avaliação"){
+      sites = sites.filter( (a) => a.status === filter);
+    }
+    else if(filter === "Avaliado"){
+      sites = sites.filter( (a) => a.status === filter);
+    }
+    else if(filter === "Erro na avaliação"){
+      sites = sites.filter( (a) => a.status === filter);
+    }
+    return sites;
   }  
+
+  activateFilter(s: any){
+    this.filter = s.target.value;
+  }
 }
