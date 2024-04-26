@@ -6,6 +6,7 @@
     </div>
 
     <div class="center-content" *ngIf="websites.length > 0">
+        <strong>Filtro de status</strong>
         <select (change)="activateFilter($event)" >
             <option value="Nenhum">Nenhum</option>
             <option value="Por avaliar">Por avaliar</option>
