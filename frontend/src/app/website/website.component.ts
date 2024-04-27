@@ -94,4 +94,8 @@ export class WebsiteComponent implements OnInit {
     this.websiteService.changeCurrentWebsite(site);
     this.router.navigate(['/add-page']);
   }
+
+  goToDetails(site: IWebsite){
+    //this.router.navigate(['/check-details']);
+  }
 }
