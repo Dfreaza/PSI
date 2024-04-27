@@ -3,7 +3,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 8vh; /* Adjust this value as needed */
 }
 
 input {
@@ -12,14 +11,6 @@ input {
 
 h2 {
     text-align: center;
-}
-
-table {
-    margin-left: auto;
-    margin-right: auto;
-}
-td, th {
-    border: 1px solid black;
 }
 #errorSite{
     color: red;

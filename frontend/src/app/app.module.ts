@@ -7,12 +7,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WebsiteComponent } from './website/website.component';
 import { AddPageComponent } from './add-page/add-page.component';
+import { WebsiteViewComponent } from './website-view/website-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WebsiteComponent,
     AddPageComponent,
+    WebsiteViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -21,7 +23,7 @@ import { AddPageComponent } from './add-page/add-page.component';
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [WebsiteComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

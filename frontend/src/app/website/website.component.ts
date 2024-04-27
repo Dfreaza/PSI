@@ -11,9 +11,6 @@ import { IWebsite } from '../website';
 export class WebsiteComponent implements OnInit {
   url: string = '';
   websites: IWebsite[] = [];
-  submissionOrder: boolean = true;
-  appraisalOrder: boolean = true;
-  filter: string = 'Nenhum';
   invalidWebsite: boolean = false;
 
   constructor(private router: Router, private websiteService: WebsiteService) { }
@@ -45,57 +42,5 @@ export class WebsiteComponent implements OnInit {
 
   ackCorrectWebsiteURL() {
     return this.url !== '' && new URL(this.url).hostname !== 'localhost';
-  }
-
-  sortSub(ascendingOrder: boolean){
-
-    if(ascendingOrder){
-      this.websites.sort((a, b) => new Date(b.submissionDate).getTime() - new Date(a.submissionDate).getTime());
-    }
-    else{
-      this.websites.sort((a, b) => new Date(a.submissionDate).getTime() - new Date(b.submissionDate).getTime());
-    }
-    this.submissionOrder = !this.submissionOrder;
-  }
-
-  sortAppr(ascendingOrder: boolean){
-    if(ascendingOrder){
-      this.websites.sort((a, b) => new Date(b.appraisalDate).getTime() - new Date(a.appraisalDate).getTime());
-    }
-    else{
-      this.websites.sort((a, b) => new Date(a.appraisalDate).getTime() - new Date(b.appraisalDate).getTime());
-    }
-    this.appraisalOrder = !this.appraisalOrder;
-  }
-
-  filterStatus(filter: any){
-    let sites = this.websites;
-    
-    if(filter === "Por avaliar"){
-      sites = sites.filter( (a) => a.status === filter);
-    }
-    else if(filter === "Em avaliação"){
-      sites = sites.filter( (a) => a.status === filter);
-    }
-    else if(filter === "Avaliado"){
-      sites = sites.filter( (a) => a.status === filter);
-    }
-    else if(filter === "Erro na avaliação"){
-      sites = sites.filter( (a) => a.status === filter);
-    }
-    return sites;
-  }  
-
-  activateFilter(s: any){
-    this.filter = s.target.value;
-  }
-
-  goToPage(site: IWebsite){
-    this.websiteService.changeCurrentWebsite(site);
-    this.router.navigate(['/add-page']);
-  }
-
-  goToDetails(site: IWebsite){
-    //this.router.navigate(['/check-details']);
   }
 }
