@@ -2,6 +2,7 @@
 
 <div class="center-content">
     <input [(ngModel)]="pageUrl" placeholder="Enter page URL">
+    <strong id="errorSite" *ngIf="pageInvalid">Pagina inválida</strong>
     <div class="buttons">
         <button (click)="goBack()">Go back</button>
         <button (click)="addPage(pageUrl)">Add Page</button>

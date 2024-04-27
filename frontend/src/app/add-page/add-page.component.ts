@@ -16,6 +16,7 @@ export class AddPageComponent {
   pageUrl: string = '';
   pageUrls: string = '';
   currentWebsite: IWebsite | null;
+  pageInvalid: boolean = false;
 
   ngOnInit() {
     this.currentWebsite = this.websiteService.getCurrentWebsite();
@@ -29,12 +30,14 @@ export class AddPageComponent {
 // Em AddPageComponent
 addPage(pageUrl: string) {
   if(this.currentWebsite && !pageUrl.startsWith(this.currentWebsite.url)){
+    this.pageInvalid = true;
     console.log("O URL da página não pertence ao site.");
     return;
   }
   const page = { url: pageUrl } as IPage;
   this.websiteService.addPageToWebsite(page).subscribe(updatedWebsite => {
     console.log('Website updated', updatedWebsite);
+    this.pageInvalid = false;
   });
 }
 
