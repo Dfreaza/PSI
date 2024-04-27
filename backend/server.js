@@ -8,9 +8,19 @@ const app = express();
 //mongoose.connect('mongodb://psi021:psi021@localhost:27017/psi021?retryWrites=true&authSource=psi021', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true });
 
+
+const PageSchema = new mongoose.Schema({
+  url: String,
+  dataAvaliacao: {type: Date, default: Date.now},
+  estadoPagina: { type: String, default: 'nao conforme' },
+});
+
+const Page = mongoose.model('Page', PageSchema);
+
+
 const WebsiteSchema = new mongoose.Schema({
   url: String,
-  pages: [String],
+  pages: [PageSchema],
   submissionDate: {type: Date, default: Date.now},
   appraisalDate:{type: Date, default: Date.now},
   status: { type: String, default: 'Por avaliar' }
@@ -18,18 +28,6 @@ const WebsiteSchema = new mongoose.Schema({
 
 const Website = mongoose.model('Website', WebsiteSchema);
 
-const PageSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true
-  },
-  url: {
-    type: String,
-    required: true
-  }
-});
-
-const Page = mongoose.model('Page', PageSchema);
 
 app.use(bodyParser.json());
 app.use(cors());
