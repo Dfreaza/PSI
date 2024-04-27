@@ -13,6 +13,9 @@ import { IPage } from './page';
 })
 export class WebsiteService {
 
+  private apiUrl = 'http://localhost:3000';
+  //private apiUrl = 'http://appserver.alunos.di.fc.ul.pt:3021';
+
   private currentWebsite = new BehaviorSubject<IWebsite | null>(null);
   currentWebsite$ = this.currentWebsite.asObservable();
   private currentWebsiteValue: IWebsite | null = null;
@@ -41,33 +44,33 @@ export class WebsiteService {
       filter((website: IWebsite | null): website is IWebsite => website !== null),
       switchMap((website: IWebsite) => {
         website.pages.push(page);
-        return this.http.put<IWebsite>(`http://localhost:3000/api/websites/${website._id}`, { page });
+        return this.http.put<IWebsite>(`${this.apiUrl}/api/websites/${website._id}`, { page });
       })
     );
   }
 
   addWebsite(website: IWebsite): Observable<IWebsite>{
-    return this.http.post<IWebsite>('http://localhost:3000/api/websites', website);
+    return this.http.post<IWebsite>(`${this.apiUrl}/api/websites`, website);
   }
 
   getWebsites(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/api/websites');
+    return this.http.get<any[]>(`${this.apiUrl}/api/websites`);
   }
 
   getWebsite(id: string) {
-    return this.http.get(`http://localhost:3000/api/websites/${id}`);
+    return this.http.get(`${this.apiUrl}/api/websites/${id}`);
   }
 
   getPages(id: string) {
-    return this.http.get(`http://localhost:3000/api/websites/${id}/pages`);
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
   }
 
   getWebsitePages(id: string) {
-    return this.http.get(`http://localhost:3000/api/websites/${id}/pages`);
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
   }
 
   getWebsitePage(id: string, pageId: string) {
-    return this.http.get(`http://localhost:3000/api/websites/${id}/pages/${pageId}`);
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
   }
 }
   
