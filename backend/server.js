@@ -5,8 +5,8 @@ const cors = require('cors');
 
 const app = express();
 
-//mongoose.connect('mongodb://psi021:psi021@localhost:27017/psi021?retryWrites=true&authSource=psi021', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://psi021:psi021@localhost:27017/psi021?retryWrites=true&authSource=psi021', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 const PageSchema = new mongoose.Schema({
