@@ -7,6 +7,8 @@ import { WebsiteComponent } from './website/website.component';
 const routes: Routes = [
   {path: '', component: WebsiteComponent },
   {path: 'add-page', component: AddPageComponent},
+  {path: 'add-website', component: WebsiteComponent},
+  {path: 'website-table', component: WebsiteComponent}
 ];
 
 @NgModule({

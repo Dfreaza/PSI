@@ -37,6 +37,7 @@ addPage(pageUrl: string) {
   const page = { url: pageUrl } as IPage;
   this.websiteService.addPageToWebsite(page).subscribe(updatedWebsite => {
     console.log('Website updated', updatedWebsite);
+    this.pageUrl = '';
     this.pageInvalid = false;
   });
 }
