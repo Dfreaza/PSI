@@ -1,6 +1,6 @@
 export interface IPage{
-    lastEvaluatetion: string;
-    status: string;
+    appraisalDate: any;
+    conformity: any;
     id: number;
     url: string;
 }

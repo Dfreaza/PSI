@@ -16,7 +16,9 @@ export class WebsiteDetailsComponent implements OnInit{
   constructor(private route: Router, private websiteService: WebsiteService, private websiteComponent: WebsiteComponent) { }
 
   website = {} as IWebsite;
-  pages: IPage[] = []; 
+  pages: IPage[] = [];
+  page = {} as IPage;
+  evaluation = "NA";  
 
   ngOnInit() {
     this.websiteService.getCurrentWebsite().subscribe((webs: IWebsite | null) => {
@@ -25,5 +27,13 @@ export class WebsiteDetailsComponent implements OnInit{
         this.pages = webs ? webs.pages : [];
       }
     });
+  }
+
+  choosePage(id: number){
+    this.page = this.pages.find(p => p.id === id) as IPage;
+  }
+
+  evaluatePages(){
+    //TODO: Quando tivermos de avaliar páginas, esta função será chamada
   }
 }
