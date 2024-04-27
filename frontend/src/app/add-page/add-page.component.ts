@@ -5,7 +5,6 @@ import { IWebsite } from '../website';
 import { IPage } from '../page';
 
 
-
 @Component({
   selector: 'app-add-page',
   templateUrl: './add-page.component.html',
@@ -33,12 +32,12 @@ export class AddPageComponent {
 
 // Em AddPageComponent
 addPage(pageUrl: string) {
-  if(this.currentWebsite && !pageUrl.startsWith(this.currentWebsite.url)){
+  if (this.currentWebsite && !pageUrl.startsWith(this.currentWebsite.url)) {
     this.pageInvalid = true;
     console.log("O URL da página não pertence ao site.");
     return;
   }
-  const page = { url: pageUrl } as IPage;
+  const page = { url: pageUrl, appraisalDate: new Date() } as IPage;
   this.websiteService.addPageToWebsite(page).subscribe(updatedWebsite => {
     console.log('Website updated', updatedWebsite);
     this.pageUrl = '';

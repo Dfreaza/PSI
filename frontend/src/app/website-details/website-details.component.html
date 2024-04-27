@@ -4,14 +4,21 @@
     <p>Registration Date: {{website.submissionDate}}</p>
     <p>Last Appraisal Date: {{website.appraisalDate}}</p>
     <h3>Monitored Pages</h3>
-    <table> 
-        <ul>
+    <table>
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Conformity</th>
+                <th>Last Appraisal Date</th>
+            </tr>
+        </thead>
+        <tbody>
             <tr *ngFor="let page of showPages()">
                 <td>URL: {{page.url}}</td>
-                <td>Conformity: {{page.conformity}}</td>
+                <td>Conformity: {{getEvaluation()}}</td>
                 <td>Last Appraisal Date: {{page.appraisalDate}}</td>
             </tr>
-        </ul>
+        </tbody>
     </table>
     
 </div>
