@@ -14,8 +14,8 @@ import { of } from 'rxjs';
 })
 export class WebsiteService {
 
-  //private apiUrl = 'http://localhost:3000';
-  private apiUrl = 'http://appserver.alunos.di.fc.ul.pt:3071';
+  private apiUrl = 'http://localhost:3000';
+  //private apiUrl = 'http://appserver.alunos.di.fc.ul.pt:3071';
 
   private currentWebsite = new BehaviorSubject<IWebsite | null>(null);
   currentWebsite$ = this.currentWebsite.asObservable();
