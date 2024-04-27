@@ -4,14 +4,16 @@ Da user story 2 é preciso verificar do lado do cliente se a page é valida para
 
 
 para correr no appServer:
+
+URL para ver o site: http://appserver.alunos.di.fc.ul.pt:3021/
+
 - ssh PSI021@appserver.alunos.di.fc.ul.pt
 
 - git pull (na pasta PSI)
 
-- mongo --username psi021 --password --authenticationDatabase psi021
-    appserver.alunos.di.fc.ul.pt/psi021
+- mongo --username psi021 --password --authenticationDatabase psi021 appserver.alunos.di.fc.ul.pt/psi021
 
-- ng serve --port 3021 --host 0.0.0.0 --disableHostCheck true (se der         Unknown argument trocar para isto -> --disable-host-check)
+- ng serve --port 3021 --host 0.0.0.0 --disableHostCheck true (se der Unknown argument trocar para isto -> --disable-host-check)
 
 - node server.js
 
