@@ -60,3 +60,4 @@ export class WebsiteDetailsComponent implements OnInit{
     //TODO: Quando tivermos de avaliar páginas, esta função será chamada
   }
 }
+
