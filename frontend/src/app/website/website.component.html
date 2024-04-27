@@ -2,7 +2,7 @@
 
     <div class="center-content">
         <input [(ngModel)]="url" placeholder="Introduza website URL">
-        <button (click)="addWebsite(url)" (click)="checkUrl(url)">Add Website</button>
+        <button (click)="addWebsite(url)">Add Website</button>
         <strong id="errorSite" *ngIf="invalidWebsite">Website inválido</strong>
     </div>
 
@@ -27,6 +27,7 @@
                         <th>Status</th>
                         <th (click)="sortSub(submissionOrder)"><button>Submission date</button></th>
                         <th (click)="sortAppr(appraisalOrder)"><button>Last appraisal date</button></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,6 +36,8 @@
                         <td>{{website.status}}</td>
                         <td>{{website.submissionDate}}</td>
                         <td>{{website.appraisalDate}}</td>
+                        <td ><button>Check details</button></td>
+
                     </tr>
                 </tbody>
             </table>
