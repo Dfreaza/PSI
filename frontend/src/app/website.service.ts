@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
 import { IWebsite } from './website';
 import { IPage } from './page';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,8 @@ export class WebsiteService {
     this.currentWebsite.next(website);
   }
 
-  getCurrentWebsite() {
-    return this.currentWebsiteValue;
+  getCurrentWebsite(): Observable<IWebsite | null> {
+    return of(this.currentWebsiteValue);
   }
 
   addPagesToWebsite(selectedWebsite: string, pages: string[]) {

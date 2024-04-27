@@ -15,16 +15,20 @@ export class AddPageComponent {
 
   pageUrl: string = '';
   pageUrls: string = '';
-  currentWebsite: IWebsite | null;
+  currentWebsite: IWebsite | null = null;
   pageInvalid: boolean = false;
 
   ngOnInit() {
-    this.currentWebsite = this.websiteService.getCurrentWebsite();
-    console.log("AddPageComponent ngOnInit " + this.currentWebsite?.url);
+    this.websiteService.getCurrentWebsite().subscribe((website: IWebsite | null) => {
+      this.currentWebsite = website;
+      console.log("AddPageComponent ngOnInit " + this.currentWebsite?.url);
+    });
   }
 
-  constructor(private location: Location, public websiteService: WebsiteService) { 
-    this.currentWebsite = this.websiteService.getCurrentWebsite();
+  constructor(private location: Location, public websiteService: WebsiteService) {
+    this.websiteService.getCurrentWebsite().subscribe((website: IWebsite | null) => {
+      this.currentWebsite = website;
+    });
   }
 
 // Em AddPageComponent

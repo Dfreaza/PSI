@@ -73,7 +73,7 @@ export class WebsiteViewComponent implements OnInit{
     this.router.navigate(['/add-page']);
   }
 
-  goToDetails(site: IWebsite){
-    //this.router.navigate(['/check-details']);
+  goToDetails(website: IWebsite) {
+    this.router.navigate(['/website-details', website]);
   }
 }

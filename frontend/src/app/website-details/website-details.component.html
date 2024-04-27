@@ -1,0 +1,13 @@
+<h2>Website Details</h2>
+<p>URL: {{website.url}}</p>
+<p>Status: {{website.status}}</p>
+<p>Registration Date: {{website.submissionDate}}</p>
+<p>Last Appraisal Date: {{website.appraisalDate}}</p>
+<h3>Monitored Pages</h3>
+<ul>
+    <li *ngFor="let page of website.pages">
+        <p>URL: {{page.url}}</p>
+        <p>Last Evaluation Date: {{page.lastEvaluatetion}}</p>
+        <p>Status: {{page.status}}</p>
+    </li>
+</ul>

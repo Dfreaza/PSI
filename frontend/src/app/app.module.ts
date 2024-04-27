@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { WebsiteComponent } from './website/website.component';
 import { AddPageComponent } from './add-page/add-page.component';
 import { WebsiteViewComponent } from './website-view/website-view.component';
+import { WebsiteDetailsComponent } from './website-details/website-details.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { WebsiteViewComponent } from './website-view/website-view.component';
     WebsiteComponent,
     AddPageComponent,
     WebsiteViewComponent,
+    WebsiteDetailsComponent,
   ],
   imports: [
     BrowserModule,
