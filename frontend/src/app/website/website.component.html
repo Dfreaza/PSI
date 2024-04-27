@@ -27,7 +27,7 @@
                         <th>Status</th>
                         <th (click)="sortSub(submissionOrder)"><button>Submission date</button></th>
                         <th (click)="sortAppr(appraisalOrder)"><button>Last appraisal date</button></th>
-                        <th></th>
+             
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +36,7 @@
                         <td>{{website.status}}</td>
                         <td>{{website.submissionDate}}</td>
                         <td>{{website.appraisalDate}}</td>
-                        <td ><button>Check details</button></td>
+                        <td (click)="goToPage(website)"><button>Check details</button></td>
 
                     </tr>
                 </tbody>

@@ -90,12 +90,8 @@ export class WebsiteComponent implements OnInit {
     this.filter = s.target.value;
   }
 
-  checkUrl(url: any){
-    try{
-      const urlcheck = new URL(url);
-      this.invalidWebsite = false;
-    } catch{
-      this.invalidWebsite = true;
-    }
+  goToPage(site: IWebsite){
+    this.websiteService.changeCurrentWebsite(site);
+    this.router.navigate(['/add-page']);
   }
 }
