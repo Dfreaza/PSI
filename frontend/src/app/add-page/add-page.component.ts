@@ -28,6 +28,10 @@ export class AddPageComponent {
 
 // Em AddPageComponent
 addPage(pageUrl: string) {
+  if(this.currentWebsite && !pageUrl.startsWith(this.currentWebsite.url)){
+    console.log("O URL da página não pertence ao site.");
+    return;
+  }
   const page = { url: pageUrl } as IPage;
   this.websiteService.addPageToWebsite(page).subscribe(updatedWebsite => {
     console.log('Website updated', updatedWebsite);
