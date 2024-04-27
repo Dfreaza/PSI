@@ -5,6 +5,7 @@ import { Router } from '@angular/router'
 import { WebsiteViewComponent } from '../website-view/website-view.component';
 import { IWebsite } from '../website';
 import { IPage } from '../page';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-website-details',
@@ -13,7 +14,7 @@ import { IPage } from '../page';
 })
 export class WebsiteDetailsComponent implements OnInit{
 
-  constructor(private route: Router, private websiteService: WebsiteService, private websiteComponent: WebsiteComponent) { }
+  constructor(private route: ActivatedRoute, private router: Router, private websiteService: WebsiteService, private websiteComponent: WebsiteComponent) { }
 
   website = {} as IWebsite;
   pages: IPage[] = [];
@@ -21,10 +22,11 @@ export class WebsiteDetailsComponent implements OnInit{
   evaluation = "NA";
 
   ngOnInit() {
-    this.websiteService.getCurrentWebsite().subscribe((webs: IWebsite | null) => {
-      if (webs) {
-        this.website = webs;
-        this.pages = webs ? webs.pages : [];
+    const id = this.route.snapshot.paramMap.get('id')!;
+    this.websiteService.getWebsite(id).subscribe((website: any | null) => {
+      if (website) {
+        this.website = website;
+        this.pages = website.pages;
       }
     });
   }
@@ -33,8 +35,17 @@ export class WebsiteDetailsComponent implements OnInit{
     this.page = this.pages.find(p => p.id === id) as IPage;
   }
 
-  showPath(url: string){
-    return new URL(url).pathname;
+  showPath(url: string) {
+    try {
+      new URL(url); // This will throw an error if url is not a valid URL
+      return url;
+    } catch (_) {
+      return "Invalid URL: " + url;
+    }
+  }
+
+  showPages(){
+    return this.pages;
   }
 
   evaluatePages(){

@@ -6,7 +6,7 @@
     <h3>Monitored Pages</h3>
     <table> 
         <ul>
-            <tr *ngFor="let page of website.pages">
+            <tr *ngFor="let page of showPages()">
                 <td>URL: {{page.url}}</td>
                 <td>Conformity: {{page.conformity}}</td>
                 <td>Last Appraisal Date: {{page.appraisalDate}}</td>
