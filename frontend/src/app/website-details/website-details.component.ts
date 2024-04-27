@@ -18,7 +18,7 @@ export class WebsiteDetailsComponent implements OnInit{
   website = {} as IWebsite;
   pages: IPage[] = [];
   page = {} as IPage;
-  evaluation = "NA";  
+  evaluation = "NA";
 
   ngOnInit() {
     this.websiteService.getCurrentWebsite().subscribe((webs: IWebsite | null) => {
@@ -31,6 +31,10 @@ export class WebsiteDetailsComponent implements OnInit{
 
   choosePage(id: number){
     this.page = this.pages.find(p => p.id === id) as IPage;
+  }
+
+  showPath(url: string){
+    return new URL(url).pathname;
   }
 
   evaluatePages(){
