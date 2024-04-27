@@ -1,41 +1,44 @@
 <h2>Adiciona um novo website</h2>
 
     <div class="center-content">
-        <input [(ngModel)]="url" placeholder="Enter website URL">
-        <button onchange="addWebsite(url)">Add Website</button>
+        <input [(ngModel)]="url" placeholder="Introduza website URL">
+        <button onchange="addWebsite(url)" (click)="checkUrl(url)">Add Website</button>
+        <strong id="errorSite" *ngIf="invalidWebsite">Website inválido</strong>
     </div>
 
-    <div class="center-content" *ngIf="websites.length > 0">
-        <strong>Filtro de status</strong>
-        <select (change)="activateFilter($event)" >
-            <option value="Nenhum">Nenhum</option>
-            <option value="Por avaliar">Por avaliar</option>
-            <option value="Em avaliação">Em avaliação</option>
-            <option value="Avaliado">Avaliado</option>
-            <option value="Erro na avaliação">Erro na avaliação</option>
-        </select>
-    </div>
+
 
     <div *ngIf="websites.length > 0">
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Website</th>
-                    <th>Status</th>
-                    <th (click)="sortSub(submissionOrder)"><button>Submission date</button></th>
-                    <th (click)="sortAppr(appraisalOrder)"><button>Last appraisal date</button></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr  *ngFor="let website of filterStatus(filter)">
-                    <td>{{website.url}}</td>
-                    <td>{{website.status}}</td>
-                    <td>{{website.submissionDate}}</td>
-                    <td>{{website.appraisalDate}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="center-content">
+            <strong>Filtro de status</strong>
+            <select (change)="activateFilter($event)" >
+                <option value="Nenhum">Nenhum</option>
+                <option value="Por avaliar">Por avaliar</option>
+                <option value="Em avaliação">Em avaliação</option>
+                <option value="Avaliado">Avaliado</option>
+                <option value="Erro na avaliação">Erro na avaliação</option>
+            </select>
+        </div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Website</th>
+                        <th>Status</th>
+                        <th (click)="sortSub(submissionOrder)"><button>Submission date</button></th>
+                        <th (click)="sortAppr(appraisalOrder)"><button>Last appraisal date</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr  *ngFor="let website of filterStatus(filter)">
+                        <td>{{website.url}}</td>
+                        <td>{{website.status}}</td>
+                        <td>{{website.submissionDate}}</td>
+                        <td>{{website.appraisalDate}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 

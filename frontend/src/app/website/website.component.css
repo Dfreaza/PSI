@@ -20,5 +20,7 @@ table {
 }
 td, th {
     border: 1px solid black;
-
+}
+#errorSite{
+    color: red;
 }

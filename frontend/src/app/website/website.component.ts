@@ -14,6 +14,7 @@ export class WebsiteComponent implements OnInit {
   submissionOrder: boolean = true;
   appraisalOrder: boolean = true;
   filter: string = 'Nenhum';
+  invalidWebsite: boolean = false;
 
   constructor(private router: Router, private websiteService: WebsiteService) { }
 
@@ -81,5 +82,14 @@ export class WebsiteComponent implements OnInit {
 
   activateFilter(s: any){
     this.filter = s.target.value;
+  }
+
+  checkUrl(url: any){
+    try{
+      const urlcheck = new URL(url);
+      this.invalidWebsite = false;
+    } catch{
+      this.invalidWebsite = true;
+    }
   }
 }
