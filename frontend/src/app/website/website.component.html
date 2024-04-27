@@ -2,7 +2,7 @@
 
     <div class="center-content">
         <input [(ngModel)]="url" placeholder="Introduza website URL">
-        <button onchange="addWebsite(url)" (click)="checkUrl(url)">Add Website</button>
+        <button (click)="addWebsite(url)" (click)="checkUrl(url)">Add Website</button>
         <strong id="errorSite" *ngIf="invalidWebsite">Website inválido</strong>
     </div>
 
