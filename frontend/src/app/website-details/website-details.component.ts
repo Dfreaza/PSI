@@ -59,5 +59,9 @@ export class WebsiteDetailsComponent implements OnInit{
   evaluatePages(){
     //TODO: Quando tivermos de avaliar páginas, esta função será chamada
   }
+
+  showTime(time: Date){
+    return time.toUTCString();
+  }
 }
 

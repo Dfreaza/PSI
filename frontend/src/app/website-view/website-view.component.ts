@@ -76,4 +76,8 @@ export class WebsiteViewComponent implements OnInit{
   goToDetails(website: IWebsite) {
     this.router.navigate(['/website-details', website._id]);
   }
+
+  showTime(time: Date){
+    return time.toUTCString();
+  }
 }

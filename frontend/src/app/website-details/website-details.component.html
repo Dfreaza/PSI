@@ -2,8 +2,8 @@
 
 <div class= center-content>
     <p>URL: {{showPath(website.url)}}</p>
-    <p>Registration Date: {{website.submissionDate}}</p>
-    <p>Last Appraisal Date: {{website.appraisalDate}}</p>
+    <p>Registration Date: {{showTime(website.submissionDate)}}</p>
+    <p>Last Appraisal Date: {{showTime(website.appraisalDate)}}</p>
     <h3>Monitored Pages</h3>
     <table>
         <thead>
@@ -17,7 +17,7 @@
             <tr *ngFor="let page of showPages()">
                 <td>{{page.url}}</td>
                 <td>{{getEvaluation()}}</td>
-                <td>{{page.appraisalDate}}</td>
+                <td>{{showTime(page.appraisalDate)}}</td>
             </tr>
         </tbody>
     </table>
