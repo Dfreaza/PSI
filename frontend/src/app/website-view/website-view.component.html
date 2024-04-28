@@ -15,8 +15,8 @@
                 <tr>
                     <th>Website</th>
                     <th>Status</th>
-                    <th (click)="sortSub(submissionOrder)"><button>Submission date</button></th>
-                    <th (click)="sortAppr(appraisalOrder)"><button>Last appraisal date</button></th>
+                    <th (click)="sortSub(submissionOrder)" (click)="changeArrowSub(this.arrowSub)"><button [innerHTML]="this.arrowSub"></button>Submission date</th>
+                    <th (click)="sortAppr(appraisalOrder)" (click)="changeArrowAppr(this.arrowAppr)"><button [innerHTML]="this.arrowAppr"></button> Last appraisal date</th>
          
                 </tr>
             </thead>

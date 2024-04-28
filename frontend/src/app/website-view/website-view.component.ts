@@ -18,7 +18,8 @@ export class WebsiteViewComponent implements OnInit{
   appraisalOrder: boolean = true;
   filter: string = 'Nenhum';
   invalidWebsite: boolean = false;
-  
+  arrowSub: string = "&uArr;";
+  arrowAppr: string = "&uArr;";
   ngOnInit() {
     this.websiteService.getWebsites().subscribe((webs: IWebsite[]) => {
       this.websites = webs;
@@ -79,5 +80,22 @@ export class WebsiteViewComponent implements OnInit{
 
   showTime(time: Date){
     return new Date(time).toUTCString();
+  }
+  changeArrowSub(arr: string){
+    if(arr.startsWith('&u')){
+      this.arrowSub = "&dArr;";
+    }
+    else{
+      this.arrowSub = "&uArr;"
+    }
+  }
+
+  changeArrowAppr(arr: string){
+    if(arr.startsWith('&u')){
+      this.arrowAppr = "&dArr;";
+    }
+    else{
+      this.arrowAppr = "&uArr;"
+    }
   }
 }
