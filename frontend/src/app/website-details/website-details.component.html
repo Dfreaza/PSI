@@ -1,5 +1,6 @@
+<h2>Website Details</h2>
+
 <div class= center-content>
-    <h2>Website Details</h2>
     <p>URL: {{showPath(website.url)}}</p>
     <p>Registration Date: {{website.submissionDate}}</p>
     <p>Last Appraisal Date: {{website.appraisalDate}}</p>
@@ -14,9 +15,9 @@
         </thead>
         <tbody>
             <tr *ngFor="let page of showPages()">
-                <td>URL: {{page.url}}</td>
-                <td>Conformity: {{getEvaluation()}}</td>
-                <td>Last Appraisal Date: {{page.appraisalDate}}</td>
+                <td>{{page.url}}</td>
+                <td>{{getEvaluation()}}</td>
+                <td>{{page.appraisalDate}}</td>
             </tr>
         </tbody>
     </table>

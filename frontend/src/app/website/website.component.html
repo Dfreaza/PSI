@@ -1,10 +1,10 @@
 <h2>Adiciona um novo website</h2>
 
-    <div class="center-content">
-        <input [(ngModel)]="url" placeholder="Introduza website URL">
-        <button (click)="addWebsite(url)">Add Website</button>
-        <strong id="errorSite" *ngIf="invalidWebsite">Website inválido</strong>
-    </div>
+<div class="center-content">
+    <input [(ngModel)]="url" placeholder="Introduza website URL">
+    <strong id="errorSite" *ngIf="invalidWebsite">Website inválido</strong>
+    <button (click)="addWebsite(url)">Add Website</button>
+</div>
 
 
 
