@@ -61,7 +61,7 @@ export class WebsiteDetailsComponent implements OnInit{
   }
 
   showTime(time: Date){
-    return time.toUTCString();
+    return new Date(time).toUTCString();
   }
 }
 

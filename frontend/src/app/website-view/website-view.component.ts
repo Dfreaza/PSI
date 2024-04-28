@@ -78,6 +78,6 @@ export class WebsiteViewComponent implements OnInit{
   }
 
   showTime(time: Date){
-    return time.toUTCString();
+    return new Date(time).toUTCString();
   }
 }
