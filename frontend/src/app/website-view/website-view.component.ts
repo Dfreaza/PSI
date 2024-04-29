@@ -98,10 +98,4 @@ export class WebsiteViewComponent implements OnInit{
       this.arrowAppr = "&uArr;"
     }
   }
-
-  deleteWebsite(website: IWebsite){
-    this.websiteService.deleteWebsite(website).subscribe((res) => {
-      console.log(res);
-    });
-  }
 }
