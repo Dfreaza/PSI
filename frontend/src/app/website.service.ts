@@ -9,13 +9,14 @@ import { IWebsite } from './website';
 import { IPage } from './page';
 import { of } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class WebsiteService {
 
-  //private apiUrl = 'http://localhost:3000';
-  private apiUrl = 'http://appserver.alunos.di.fc.ul.pt:3071';
+  private apiUrl = 'http://localhost:3000';
+  //private apiUrl = 'http://appserver.alunos.di.fc.ul.pt:3071';
 
   private currentWebsite = new BehaviorSubject<IWebsite | null>(null);
   currentWebsite$ = this.currentWebsite.asObservable();
@@ -25,6 +26,10 @@ export class WebsiteService {
     this.currentWebsite$.subscribe(website => {
       this.currentWebsiteValue = website;
     });
+  }
+
+  evaluatePages(website: IWebsite, pages: IPage[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/api/evaluate`, { website, pages });
   }
 
   changeCurrentWebsite(website: IWebsite) {

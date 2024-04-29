@@ -19,7 +19,7 @@ export class WebsiteDetailsComponent implements OnInit{
   website = {} as IWebsite;
   pages: IPage[] = [];
   page = {} as IPage;
-  evaluation = "NA";
+  evaluation = "NA" as string;
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -52,8 +52,15 @@ export class WebsiteDetailsComponent implements OnInit{
     return this.evaluation;
   }
 
-  evaluatePages(){
-    //TODO: Quando tivermos de avaliar páginas, esta função será chamada
+  evaluateSelectedPages() {
+    const selectedPages = this.website.pages.filter(page => page.selected);
+    this.websiteService.evaluatePages(this.website, selectedPages).subscribe((evaluationResults: String[] | null) => {
+        if (evaluationResults) {
+          for (let i = 0; i < selectedPages.length; i++) {
+            selectedPages[i].conformity = evaluationResults[i];
+          }
+        }
+      });
   }
 
   showTime(time: Date){
