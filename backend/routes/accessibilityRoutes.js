@@ -3,6 +3,6 @@ const accessibilityController = require('../controllers/accessibilityController'
 
 const router = express.Router();
 
-router.post('/api/evaluate/:websiteId', accessibilityController.evaluateWebsiteAccessibility);
+router.patch('/evaluate', accessibilityController.evaluateWebsiteAccessibility);
 
 module.exports = router;

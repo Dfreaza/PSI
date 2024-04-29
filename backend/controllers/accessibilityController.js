@@ -1,5 +1,6 @@
 const Website = require('../models/website');
 const Page = require('../models/page');
+const qualweb = require('@qualweb/core').QualWeb;
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const { websiteId } = req.params;
@@ -7,7 +8,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
     try {
         // Fetch website details from database based on websiteId
-        const website = await Website.getWebsite(websiteId);
+        const website = await Website.findOne({ _id: websiteId });
 
         if (!website) {
             return res.status(404).json({ error: 'Website not found' });
@@ -18,7 +19,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             const page = await Page.findOne({ url: pageUrl, website: websiteId });
 
             if (!page) {
-                return res.status(404).json({ error: `Page not found: ${pageUrl}` });
+                return { error: `Page not found: ${pageUrl}` };
             }
 
             try {
@@ -36,9 +37,15 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 page.status = 'Erro na avaliação';
                 await page.save();
 
-                throw error;
+                return { error };
             }
         }));
+
+        // Handle any errors that occurred during the evaluation
+        const errors = evaluationResults.filter(result => result.error);
+        if (errors.length > 0) {
+            return res.status(500).json({ errors });
+        }
 
         // Update the status of the website based on page statuses
         if (website.pages.some(page => page.status === 'Erro na avaliação')) {

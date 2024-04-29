@@ -28,8 +28,8 @@ export class WebsiteService {
     });
   }
 
-  evaluatePages(website: IWebsite, pages: IPage[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/evaluate`, { website, pages });
+  evaluatePages(website: IWebsite, pages: IPage[]): Observable<String[] | null> {
+    return this.http.patch<String[]>(`${this.apiUrl}/evaluate`, { website, pages });
   }
 
   changeCurrentWebsite(website: IWebsite) {
