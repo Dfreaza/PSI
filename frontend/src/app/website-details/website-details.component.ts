@@ -52,10 +52,6 @@ export class WebsiteDetailsComponent implements OnInit{
     return this.evaluation;
   }
 
-  getLastAppraisal(){
-    return this.page.appraisalDate;
-  }
-
   evaluatePages(){
     //TODO: Quando tivermos de avaliar páginas, esta função será chamada
   }
