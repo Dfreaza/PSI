@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -77,6 +77,16 @@ export class WebsiteService {
 
   getWebsitePage(id: string, pageId: string) {
     return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
+  }
+
+  deleteWebsite(website: IWebsite): Observable<IWebsite>{
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {_id: website._id},
+    };
+    return this.http.delete<IWebsite>(`${this.apiUrl}/api/websites`, options);
   }
 }
   

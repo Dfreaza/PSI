@@ -20,6 +20,7 @@ export class WebsiteViewComponent implements OnInit{
   invalidWebsite: boolean = false;
   arrowSub: string = "&uArr;";
   arrowAppr: string = "&uArr;";
+  
   ngOnInit() {
     this.websiteService.getWebsites().subscribe((webs: IWebsite[]) => {
       this.websites = webs;
@@ -97,5 +98,11 @@ export class WebsiteViewComponent implements OnInit{
     else{
       this.arrowAppr = "&uArr;"
     }
+  }
+
+  deleteWebsite(website: IWebsite){
+    this.websiteService.deleteWebsite(website).subscribe((res) => {
+      console.log(res);
+    });
   }
 }

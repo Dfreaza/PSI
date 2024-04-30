@@ -63,3 +63,16 @@ exports.getAllWebsites = (req, res) => {
       res.status(500).send(err);
     });
 };
+
+exports.deleteWebsite = (req, res) => {
+  Website.findOneAndDelete({_id: req.body._id})
+  .then(website =>{
+    if (website){
+      console.log(website);
+      res.status(200).json(website);
+    }
+    else{
+      res.status(404).send("Website not found!");
+    }
+  })
+}
