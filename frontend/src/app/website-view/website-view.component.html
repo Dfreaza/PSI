@@ -1,7 +1,7 @@
 <div >
     <div class="center-content">
         <strong>Status filter</strong>
-        <select name="status filter" (change)="activateFilter($event)" >
+        <select (change)="activateFilter($event)" >
             <option value="Nenhum">Nenhum</option>
             <option value="Por avaliar">Por avaliar</option>
             <option value="Em avaliação">Em avaliação</option>
@@ -28,7 +28,7 @@
                     <td>{{showTime(website.appraisalDate)}}</td>
                     <td (click)="goToPage(website)"><button>Add pages</button></td>
                     <td (click)="goToDetails(website)"><button>Check details</button></td>
-                    <td (click)="deleteWebsite(website)"><button>X</button></td>
+
                 </tr>
             </tbody>
         </table>

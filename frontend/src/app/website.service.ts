@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { filter } from 'rxjs/operators';
 import { IWebsite } from './website';
 import { IPage } from './page';
 import { of } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,10 @@ export class WebsiteService {
     });
   }
 
+  evaluatePages(website: IWebsite, pages: IPage[]): Observable<String[] | null> {
+    return this.http.patch<String[]>(`${this.apiUrl}/evaluate`, { website, pages });
+  }
+
   changeCurrentWebsite(website: IWebsite) {
     this.currentWebsite.next(website);
   }
@@ -35,9 +40,9 @@ export class WebsiteService {
     return of(this.currentWebsiteValue);
   }
 
-  // addPagesToWebsite(selectedWebsite: string, pages: string[]) {
-  //   return this.http.post(`${this.getWebsite(selectedWebsite)}/addPages`, { url: selectedWebsite, pageUrls: pages });
-  // }
+  addPagesToWebsite(selectedWebsite: string, pages: string[]) {
+    return this.http.post(`${this.getWebsite(selectedWebsite)}/addPages`, { url: selectedWebsite, pageUrls: pages });
+  }
 
   addPageToWebsite(page: IPage): Observable<IWebsite> {
     return this.currentWebsite$.pipe(
@@ -62,26 +67,16 @@ export class WebsiteService {
     return this.http.get(`${this.apiUrl}/api/websites/${id}`);
   }
 
-  // getPages(id: string) {
-  //   return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
-  // }
+  getPages(id: string) {
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
+  }
 
-  // getWebsitePages(id: string) {
-  //   return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
-  // }
+  getWebsitePages(id: string) {
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
+  }
 
-  // getWebsitePage(id: string, pageId: string) {
-  //   return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
-  // }
-
-  deleteWebsite(website: IWebsite): Observable<IWebsite>{
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {_id: website._id},
-    };
-    return this.http.delete<IWebsite>(`${this.apiUrl}/api/websites`, options);
+  getWebsitePage(id: string, pageId: string) {
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
   }
 }
   
