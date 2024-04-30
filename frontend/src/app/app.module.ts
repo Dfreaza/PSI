@@ -9,6 +9,7 @@ import { WebsiteComponent } from './website/website.component';
 import { AddPageComponent } from './add-page/add-page.component';
 import { WebsiteViewComponent } from './website-view/website-view.component';
 import { WebsiteDetailsComponent } from './website-details/website-details.component';
+import { WebsiteDeletionComponent } from './website-deletion/website-deletion.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { WebsiteDetailsComponent } from './website-details/website-details.compo
     AddPageComponent,
     WebsiteViewComponent,
     WebsiteDetailsComponent,
+    WebsiteDeletionComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +27,7 @@ import { WebsiteDetailsComponent } from './website-details/website-details.compo
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [WebsiteComponent],
+  providers: [WebsiteComponent, WebsiteViewComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
