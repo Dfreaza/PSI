@@ -88,5 +88,15 @@ export class WebsiteService {
     };
     return this.http.delete<IWebsite>(`${this.apiUrl}/api/websites`, options);
   }
+
+  deletePage(page: IPage, website: IWebsite): Observable<IPage>{
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {page: page, webId: website._id},
+    };
+    return this.http.delete<IPage>(`${this.apiUrl}/api/websites/pages`, options);
+  }
 }
   

@@ -45,7 +45,7 @@ export class WebsiteDeletionComponent implements OnInit{
     }
     this.cboxCheck = !this.cboxCheck;
   }
-  DeleteAll(){
+  DeleteAllWebsites(){
     //falta função de verificação
     let array = document.querySelectorAll('.rowDel');
 

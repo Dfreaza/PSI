@@ -68,11 +68,31 @@ exports.deleteWebsite = (req, res) => {
   Website.findOneAndDelete({_id: req.body._id})
   .then(website =>{
     if (website){
-      console.log(website);
       res.status(200).json(website);
     }
     else{
       res.status(404).send("Website not found!");
     }
   })
-}
+};
+
+exports.deletePage = (req, res) => {
+  Website.findOne({ _id: req.body.webId })
+  .then(website => {
+      if (website) {
+          website.pages.remove(req.body.page);
+          website.save()
+            .then(() => {
+            res.status(200).json("Page Removed Sucessfully!");
+        })
+          
+
+      } else {
+      res.status(404).send("Website not found");
+      }
+  })
+  .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+  });
+};
