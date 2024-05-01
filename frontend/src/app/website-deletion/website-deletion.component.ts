@@ -47,21 +47,32 @@ export class WebsiteDeletionComponent implements OnInit{
   }
   DeleteAll(){
     //falta função de verificação
-    let array = document.querySelectorAll('.cbox');
+    let array = document.querySelectorAll('.rowDel');
+
     for (var i = 0; i < array.length; i++){
-      let a = array[i] as HTMLInputElement;
+      let a = array[i].children[0].firstChild as HTMLInputElement;
+
       if (a.checked === true){
-        this.websiteView.deleteWebsite(this.websites[i]);
+        let text = array[i].children[1].textContent;
+        this.websiteView.deleteWebsite(this.getWebsiteFromUrl(text));
       }
     }
+  }
 
+  getWebsiteFromUrl(url: string | null){
+    for (var i = 0; url !== null && i < this.websites.length; i++){
+      if(url === this.websites[i].url){
+        return this.websites[i];
+      }
+    }
+    return null;
   }
 
   enableButton(){
     let array = document.querySelectorAll('.cbox');
     for (var i = 0; i < array.length; i++){
       let a = array[i] as HTMLInputElement;
-      if (a.checked === true){console.log("aqui");return false}
+      if (a.checked === true){return false}
     }
     return true;
   }

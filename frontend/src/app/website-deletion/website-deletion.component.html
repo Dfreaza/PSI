@@ -5,17 +5,14 @@
                 <th><input type="checkbox" (click)="checkAll(this.cboxCheck)">Remove</th>
                 <th>Website</th>
                 <th>Status</th>
-                <th></th>
-                <th></th>
-     
+                <th></th>     
             </tr>
         </thead>
         <tbody>
-            <tr  *ngFor="let website of websites">
+            <tr class="rowDel" *ngFor="let website of websites">
                 <td><input type="checkbox" class="cbox"></td>
                 <td>{{website.url}}</td>
                 <td>{{website.status}}</td>
-                <td (click)="goToPage(website)"><button>Add pages</button></td>
                 <td (click)="goToDetails(website)"><button>Check details</button></td>
             </tr>
         </tbody>

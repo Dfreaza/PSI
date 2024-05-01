@@ -100,9 +100,11 @@ export class WebsiteViewComponent implements OnInit{
     }
   }
 
-  deleteWebsite(website: IWebsite){
-    this.websiteService.deleteWebsite(website).subscribe((res) => {
-      console.log(res);
-    });
+  deleteWebsite(website: IWebsite | null){
+    if (website !== null){
+      this.websiteService.deleteWebsite(website).subscribe((res) => {
+        console.log(res);
+      });
+    }
   }
 }
