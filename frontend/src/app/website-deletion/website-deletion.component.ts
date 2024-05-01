@@ -46,15 +46,29 @@ export class WebsiteDeletionComponent implements OnInit{
     this.cboxCheck = !this.cboxCheck;
   }
   DeleteAllWebsites(){
-    //falta função de verificação
     let array = document.querySelectorAll('.rowDel');
+    let websitesToDelete = [];
+    let counter = 0;
+    const textOne = 'You have selected ';
+    const textTwo = ' website(s) that contain 1 or more pages. Do you still wish to delete?';
 
     for (var i = 0; i < array.length; i++){
       let a = array[i].children[0].firstChild as HTMLInputElement;
 
       if (a.checked === true){
         let text = array[i].children[1].textContent;
-        this.websiteView.deleteWebsite(this.getWebsiteFromUrl(text));
+        let website = this.getWebsiteFromUrl(text);
+
+        if(website !== null && website.pages.length > 0){
+          counter++;
+        }
+        websitesToDelete.push(website);        
+      }
+    }
+
+    if(counter === 0 || (counter > 0 && confirm(textOne + counter + textTwo))){
+      for (i = 0; i <  websitesToDelete.length; i++){
+        this.websiteView.deleteWebsite(websitesToDelete[i]);
       }
     }
   }
