@@ -9,7 +9,7 @@ import { WebsiteComponent } from './website/website.component';
 import { AddPageComponent } from './add-page/add-page.component';
 import { WebsiteViewComponent } from './website-view/website-view.component';
 import { WebsiteDetailsComponent } from './website-details/website-details.component';
-import { WebsiteDeletionComponent } from './website-deletion/website-deletion.component';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +18,6 @@ import { WebsiteDeletionComponent } from './website-deletion/website-deletion.co
     AddPageComponent,
     WebsiteViewComponent,
     WebsiteDetailsComponent,
-    WebsiteDeletionComponent,
   ],
   imports: [
     BrowserModule,

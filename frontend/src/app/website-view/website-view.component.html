@@ -13,6 +13,7 @@
         <table>
             <thead>
                 <tr>
+                    <th><input type="checkbox"  (click)="checkAll(this.cboxCheck)">Remove</th>
                     <th>Website</th>
                     <th>Status</th>
                     <th (click)="sortSub(submissionOrder)" (click)="changeArrowSub(this.arrowSub)"><button [innerHTML]="this.arrowSub"></button>Submission date</th>
@@ -21,16 +22,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr  *ngFor="let website of filterStatus(filter)">
+                <tr class="rowDel" *ngFor="let website of filterStatus(filter)">
+                    <td><input type="checkbox" class="cbox"></td>
                     <td>{{website.url}}</td>
                     <td>{{website.status}}</td>
                     <td>{{showTime(website.submissionDate)}}</td>
                     <td>{{showTime(website.appraisalDate)}}</td>
                     <td (click)="goToPage(website)"><button>Add pages</button></td>
                     <td (click)="goToDetails(website)"><button>Check details</button></td>
-                    <td (click)="deleteWebsite(website)"><button>X</button></td>
                 </tr>
             </tbody>
         </table>
+        <button  (click)="DeleteAllWebsites()">Delete</button>
     </div>
 </div>

@@ -6,7 +6,6 @@ import { WebsiteViewComponent } from '../website-view/website-view.component';
 import { IWebsite } from '../website';
 import { IPage } from '../page';
 import { ActivatedRoute } from '@angular/router';
-import { WebsiteDeletionComponent } from '../website-deletion/website-deletion.component';
 
 @Component({
   selector: 'app-website-details',
