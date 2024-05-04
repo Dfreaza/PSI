@@ -11,13 +11,16 @@
                 <th>URL</th>
                 <th>Conformity</th>
                 <th>Last Appraisal Date</th>
+                <th>Status</th>
                 <th>Select</th>
+
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let page of showPages()">
                 <td>{{page.url}}</td>
                 <td>{{getEvaluation()}}</td>
+                <td>{{page.status}}</td>
                 <td>{{showTime(page.appraisalDate)}}</td>
                 <td><input type="checkbox" [(ngModel)]="page.selected"></td>
             </tr>

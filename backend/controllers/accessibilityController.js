@@ -1,10 +1,20 @@
 const Website = require('../models/website');
 const Page = require('../models/page');
-const qualweb = require('@qualweb/core').QualWeb;
+const { QualWeb } = require('@qualweb/core');
+const { generateEARLReport } = require('@qualweb/earl-reporter');
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
-    const { websiteId } = req.params;
-    const { pages } = req.body; // Array of page URLs to evaluate
+    const websiteId = req.body.website._id;
+    console.log(websiteId);
+    const pages = req.body.pages; // Array of page URLs to evaluate
+    console.log(pages);
+
+    // Create QualWeb instance
+    const plugins = { adBlock: true, stealth: true };
+    const clusterOptions = { timeout: 60 * 1000 };
+    const launchOptions = {};
+    const qualweb = new QualWeb(plugins);
+    await qualweb.start(clusterOptions, launchOptions);
 
     try {
         // Fetch website details from database based on websiteId
@@ -15,50 +25,64 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         }
 
         // Initiate accessibility evaluation for each page using QualWeb core
-        const evaluationResults = await Promise.all(pages.map(async (pageUrl) => {
-            const page = await Page.findOne({ url: pageUrl, website: websiteId });
-
-            if (!page) {
-                return { error: `Page not found: ${pageUrl}` };
-            }
+        //this line has done a fucky wucky 
+        const evaluationResults = await Promise.all(pages.map(async (pageObject) => {
+            const page = await Website.findOne({ url: pageObject.url, website_id: pageObject.website_id });
 
             try {
                 page.status = 'Em avaliação';
                 await page.save();
 
-                const evaluationResult = await qualweb.evaluate(page.url);
+                // Execute accessibility evaluation
+                const qualwebOptions = { url: page.url };
+                let report;
+                try {
+                    report = await qualweb.evaluate(qualwebOptions);
+                } catch (error) {
+                    console.error('Error during QualWeb evaluation:', error);
+                    throw error;
+                }
 
-                page.evaluationResult = evaluationResult;
-                page.status = evaluationResult.errors.length === 0 ? 'Conforme' : 'Não conforme';
+                console.log('Report:', report);
+
+                // Check if report is null
+                if (report === null) {
+                    console.log('Report is null');
+                }
+
+                // Generate EARL report
+                const earlOptions = {};
+                let earlReport;
+                try {
+                    earlReport = generateEARLReport(report, earlOptions);
+                } catch (error) {
+                    console.error('Error during EARL report generation:', error);
+                    throw error;
+                }
+
+                console.log('EARL Report:', earlReport);
+
+                // Check if EARL report is null
+                if (earlReport === null) {
+                    console.log('EARL Report is null');
+                }
+
+                page.evaluationResult = earlReport;
+                page.status = earlReport.errors.length === 0 ? 'Conforme' : 'Não conforme';
                 await page.save();
 
-                return evaluationResult;
+                return earlReport;
             } catch (error) {
                 page.status = 'Erro na avaliação';
                 await page.save();
 
                 return { error };
             }
-        }));
+    }));
 
-        // Handle any errors that occurred during the evaluation
-        const errors = evaluationResults.filter(result => result.error);
-        if (errors.length > 0) {
-            return res.status(500).json({ errors });
-        }
+        // Stop QualWeb
+        await qualweb.stop();
 
-        // Update the status of the website based on page statuses
-        if (website.pages.some(page => page.status === 'Erro na avaliação')) {
-            website.status = 'Erro na avaliação';
-        } else if (website.pages.every(page => page.status === 'Conforme' || page.status === 'Não conforme')) {
-            website.status = 'Avaliado';
-        } else {
-            website.status = 'Em avaliação';
-        }
-        await website.save();
-
-        // Return the evaluation results
-        res.status(200).json({ message: 'Accessibility evaluation completed successfully', results: evaluationResults });
     } catch (error) {
         console.error('Error evaluating accessibility:', error);
         res.status(500).json({ error: 'Internal server error' });

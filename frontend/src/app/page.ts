@@ -3,5 +3,7 @@ export interface IPage{
     appraisalDate: any;
     conformity: String;
     id: number;
+    website_id: number;
     url: string;
+    status: string;
 }

@@ -20,6 +20,7 @@ export class WebsiteDetailsComponent implements OnInit{
   pages: IPage[] = [];
   page = {} as IPage;
   evaluation = "NA" as string;
+  website_id = 0;
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -27,6 +28,7 @@ export class WebsiteDetailsComponent implements OnInit{
       if (website) {
         this.website = website;
         this.pages = website.pages;
+        this.website_id = website.id;
       }
     });
   }
@@ -55,12 +57,15 @@ export class WebsiteDetailsComponent implements OnInit{
   evaluateSelectedPages() {
     const selectedPages = this.website.pages.filter(page => page.selected);
     this.websiteService.evaluatePages(this.website, selectedPages).subscribe((evaluationResults: String[] | null) => {
-        if (evaluationResults) {
-          for (let i = 0; i < selectedPages.length; i++) {
-            selectedPages[i].conformity = evaluationResults[i];
-          }
+      console.log('evaluationResults:', evaluationResults); // Add this line
+      if (evaluationResults) {
+        for (let i = 0; i < selectedPages.length; i++) {
+          selectedPages[i].conformity = evaluationResults[i];
+          console.log("Page " + selectedPages[i].id + " evaluated with conformity: " + selectedPages[i].conformity);
         }
-      });
+      }
+    });
+    console.log("Evaluation done");
   }
 
   showTime(time: Date){
