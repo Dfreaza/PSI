@@ -12,6 +12,11 @@ h2 {
     text-align: center;
 }
 
+table thead th#remove,
+table tbody td#remove {
+    width: 8    0px;
+}
+
 .center-content {
     display: flex;
     flex-direction: column;

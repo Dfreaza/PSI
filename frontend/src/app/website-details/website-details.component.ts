@@ -17,11 +17,12 @@ export class WebsiteDetailsComponent implements OnInit{
   constructor(private route: ActivatedRoute, private router: Router, private websiteService: WebsiteService, private websiteComponent: WebsiteComponent) { }
 
   website = {} as IWebsite;
+  status  = {} as String;
   pages: IPage[] = [];
   page = {} as IPage;
-  evaluation = "NA" as string;
   cboxCheck: boolean = false;
   website_id = 0;
+  conformity = "NA";
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -51,10 +52,6 @@ export class WebsiteDetailsComponent implements OnInit{
     return this.pages;
   }
 
-  getEvaluation(){
-    return this.evaluation;
-  }
-
   evaluateSelectedPages() {
     const selectedPages = this.website.pages.filter(page => page.selected);
     this.websiteService.evaluatePages(this.website, selectedPages).subscribe((evaluationResults: String[] | null) => {
@@ -66,6 +63,8 @@ export class WebsiteDetailsComponent implements OnInit{
         }
       }
     });
+    this.conformity = "Evaluation done"; // tem que ser mudado para os valores da avaliação
+    this.status = "Avaliado";
     console.log("Evaluation done");
   }
 

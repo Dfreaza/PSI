@@ -1,13 +1,10 @@
 const Website = require('../models/website');
-const Page = require('../models/page');
 const { QualWeb } = require('@qualweb/core');
 const { generateEARLReport } = require('@qualweb/earl-reporter');
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const websiteId = req.body.website._id;
-    console.log(websiteId);
     const pages = req.body.pages; // Array of page URLs to evaluate
-    console.log(pages);
 
     // Create QualWeb instance
     const plugins = { adBlock: true, stealth: true };
@@ -24,61 +21,73 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             return res.status(404).json({ error: 'Website not found' });
         }
 
+        // Update website status to 'Em avaliação'
+        website.status = 'Em avaliação';
+        await website.save();
+
         // Initiate accessibility evaluation for each page using QualWeb core
-        //this line has done a fucky wucky 
         const evaluationResults = await Promise.all(pages.map(async (pageObject) => {
-            const page = await Website.findOne({ url: pageObject.url, website_id: pageObject.website_id });
+            const page = website.pages.find(page => page.url === pageObject.url);
 
-            try {
-                page.status = 'Em avaliação';
-                await page.save();
-
-                // Execute accessibility evaluation
-                const qualwebOptions = { url: page.url };
-                let report;
-                try {
-                    report = await qualweb.evaluate(qualwebOptions);
-                } catch (error) {
-                    console.error('Error during QualWeb evaluation:', error);
-                    throw error;
-                }
-
-                console.log('Report:', report);
-
-                // Check if report is null
-                if (report === null) {
-                    console.log('Report is null');
-                }
-
-                // Generate EARL report
-                const earlOptions = {};
-                let earlReport;
-                try {
-                    earlReport = generateEARLReport(report, earlOptions);
-                } catch (error) {
-                    console.error('Error during EARL report generation:', error);
-                    throw error;
-                }
-
-                console.log('EARL Report:', earlReport);
-
-                // Check if EARL report is null
-                if (earlReport === null) {
-                    console.log('EARL Report is null');
-                }
-
-                page.evaluationResult = earlReport;
-                page.status = earlReport.errors.length === 0 ? 'Conforme' : 'Não conforme';
-                await page.save();
-
-                return earlReport;
-            } catch (error) {
-                page.status = 'Erro na avaliação';
-                await page.save();
-
-                return { error };
+            if (!page) {
+                console.log(`Page not found: ${pageObject.url}`);
+                return { error: `Page not found: ${pageObject.url}` };
             }
-    }));
+
+            // Execute accessibility evaluation
+            const qualwebOptions = { url: page.url };
+            let report;
+            try {
+                report = await qualweb.evaluate(qualwebOptions);
+            } catch (error) {
+                console.error('Error during QualWeb evaluation:', error);
+                throw error;
+            }
+
+            console.log('Report:', report);
+
+            // Check if report is null
+            if (report === null) {
+                console.log('Report is null');
+            }
+
+            // Generate EARL report
+            const earlOptions = {};
+            let earlReport;
+            try {
+                earlReport = generateEARLReport(report, earlOptions);
+            } catch (error) {
+                console.error('Error during EARL report generation:', error);
+                throw error;
+            }
+
+            console.log('EARL Report:', earlReport);
+
+            // Check if EARL report is null
+            if (earlReport === null) {
+                console.log('EARL Report is null');
+            }
+
+            page.evaluationResult = earlReport;
+            if (earlReport && earlReport.errors) {
+                page.conformity = earlReport.errors.length === 0 ? 'Conforme' : 'Não conforme';
+            } else {
+                console.log('EARL report or errors is undefined');
+                page.conformity = 'Conforme';
+            }
+            page.status = 'Avaliado';
+            return earlReport;
+        }));
+
+        // Check if any page has status 'Erro na avaliação'
+        if (website.pages.some(page => page.status === 'Erro na avaliação')) {
+            website.status = 'Erro na avaliação';
+        } else {
+            website.status = 'Avaliado';
+        }
+
+        // Save the website document with the updated pages and status
+        await website.save();
 
         // Stop QualWeb
         await qualweb.stop();
