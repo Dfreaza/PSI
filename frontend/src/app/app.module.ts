@@ -10,6 +10,7 @@ import { AddPageComponent } from './add-page/add-page.component';
 import { WebsiteViewComponent } from './website-view/website-view.component';
 import { WebsiteDetailsComponent } from './website-details/website-details.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +26,7 @@ import { WebsiteDetailsComponent } from './website-details/website-details.compo
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [WebsiteComponent],
+  providers: [WebsiteComponent, WebsiteViewComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

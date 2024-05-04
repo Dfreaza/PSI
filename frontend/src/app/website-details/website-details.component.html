@@ -8,6 +8,7 @@
     <table>
         <thead>
             <tr>
+                <th><input type="checkbox" (click)="checkAll(this.cboxCheck)">Remove</th>
                 <th>URL</th>
                 <th>Conformity</th>
                 <th>Last Appraisal Date</th>
@@ -17,7 +18,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let page of showPages()">
+            <tr class="rowDel" *ngFor="let page of showPages()">
+                <td><input type="checkbox" class="cbox"></td>
                 <td>{{page.url}}</td>
                 <td>{{getEvaluation()}}</td>
                 <td>{{page.status}}</td>
@@ -27,6 +29,6 @@
         </tbody>
         <button (click)="evaluateSelectedPages()">Evaluate Selected Pages</button>
     </table>
-    
+    <button  (click)="DeleteAllPages()">Delete Pages</button>
 </div>
 

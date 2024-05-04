@@ -20,6 +20,7 @@ export class WebsiteDetailsComponent implements OnInit{
   pages: IPage[] = [];
   page = {} as IPage;
   evaluation = "NA" as string;
+  cboxCheck: boolean = false;
   website_id = 0;
 
   ngOnInit() {
@@ -70,6 +71,53 @@ export class WebsiteDetailsComponent implements OnInit{
 
   showTime(time: Date){
     return new Date(time).toUTCString();
+  }
+
+  checkAll(check: boolean){
+    let array = document.querySelectorAll('.cbox');
+    
+    if(this.cboxCheck === false){
+      
+      for (var i = 0; i < array.length; i++){
+        let a = array[i] as HTMLInputElement;
+        a.checked = true;
+      }
+    }
+    else{
+      for (var i = 0; i < array.length; i++){
+        let a = array[i] as HTMLInputElement;
+        a.checked = false;
+      }
+    }
+    this.cboxCheck = !this.cboxCheck;
+  }
+
+  getPageFromUrl(url: string | null){
+    for (var i = 0; url !== null && i < this.pages.length; i++){
+      if(url === this.pages[i].url){
+        return this.pages[i];
+      }
+    }
+    return null;
+  }
+
+  DeleteAllPages(){
+    let array = document.querySelectorAll('.rowDel');
+
+    for (var i = 0; i < array.length; i++){
+      let a = array[i].children[0].firstChild as HTMLInputElement;
+
+      if (a.checked === true){
+        let text = array[i].children[1].textContent;
+        let page = this.getPageFromUrl(text);
+
+        if( page !== null){
+          this.websiteService.deletePage(page, this.website).subscribe((res) => {
+            console.log(res);
+          });
+        }       
+      }
+    }
   }
 }
 
