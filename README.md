@@ -1,10 +1,11 @@
 # PSI
 
-coisas para corrigir:
+Coisas Para Corrigir:
 - Tanto o delete pages e o evaluate selected pages, não atualizam a tabela quando clico no botão, dando reload da pagina o delete atualiza tabela mas o evaluate não. Para atualizar o evaluate preciso de ir para as tabelas de websites e voltar para o website que eu fiz o evaluate.  
 
+- componente para a estatísticas do website ? 
 
-para correr no appServer:
+Para Correr No AppServer:
 
 URL para ver o site: http://appserver.alunos.di.fc.ul.pt:3021/
 
@@ -19,7 +20,7 @@ URL para ver o site: http://appserver.alunos.di.fc.ul.pt:3021/
 - node server.js
 
 
-para correr abrir quatro terminais (o mongod e mongo tem de ser pela ordem):
+Para Correr Abrir Quatro Terminais (o mongod e mongo tem de ser pela ordem):
 
 /frontend ng serve
 
