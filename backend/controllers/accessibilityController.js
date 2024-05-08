@@ -99,8 +99,14 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         }));
 
         // Check if any page has status 'Erro na avaliação'
-        if (website.pages.some(page => page.status === 'Erro na avaliação')) {
+        if (evaluationResults.some(result => result.error)) {
             website.status = 'Erro na avaliação';
+            // Update the status of the pages that had an error during evaluation
+            website.pages.forEach(page => {
+                if (evaluationResults.some(result => result.error && result.error.includes(page.url))) {
+                    page.status = 'Erro na avaliação';
+                }
+            });
         } else {
             website.status = 'Avaliado';
         }
