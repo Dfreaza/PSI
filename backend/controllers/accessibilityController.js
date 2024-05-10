@@ -3,6 +3,7 @@ const path = require('path');
 const Website = require('../models/website');
 const { QualWeb } = require('@qualweb/core');
 const { generateEARLReport } = require('@qualweb/earl-reporter');
+const { url } = require('inspector');
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const websiteId = req.body.website._id;
@@ -70,23 +71,11 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 console.log('EARL Report is null');
             }
 
-            /// Combine the reports
-            const combinedReport = {
-                report,
-                earlReport
-            };
+            // Save the reports as properties of the page object
+            page.report = JSON.stringify(report);
+            page.earlReport = JSON.stringify(earlReport);
 
-            // Generate a unique filename for each page
-            const filename = path.join(__dirname, `reports/${pageObject.url.replace(/\/|:/g, '_')}.json`);
-
-            // Check if the report is not empty and the file does not exist
-            if ((Object.keys(report).length !== 0 || Object.keys(earlReport).length !== 0) && !fs.existsSync(filename)) {
-                // Write the combined report to a new file
-                fs.writeFileSync(filename, JSON.stringify(combinedReport, null, 2));
-            } else if (fs.existsSync(filename)) {
-                console.log('File already exists');
-            }
-
+            console.log('Page:', url, earlReport, report);
             page.evaluationResult = earlReport;
             if (earlReport && earlReport.errors) {
                 page.conformity = earlReport.errors.length === 0 ? 'Conforme' : 'Não conforme';

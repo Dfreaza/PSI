@@ -6,4 +6,6 @@ export interface IPage{
     website_id: number;
     url: string;
     status: string;
+    earlReport: string;
+    report: string;
 }
