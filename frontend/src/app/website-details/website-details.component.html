@@ -1,14 +1,14 @@
-<h2>Website Details</h2>
+
 
 <div class= center-content>
+    <h2>Website Details</h2>
     <p>URL: {{showPath(website.url)}}</p>
     <p>Registration Date: {{showTime(website.submissionDate)}}</p>
     <p>Last Appraisal Date: {{showTime(website.appraisalDate)}}</p>
-    <h3>Monitored Pages</h3>
 
-<!--     <div>
+ <!--    <div> 
         <h3>Accessibility Indicators</h3>
-        <p>Total pages without accessibility errors: {{getPagesWithoutErrors()}}</p>
+        <p>Total pages without accessibility errors: {{pagesWithoutErrors}}</p>
         <p>Total pages with at least one accessibility error: {{getPagesWithErrors()}}</p>
         <p>Total pages with at least one level A accessibility error: {{getPagesWithLevelAErrors()}}</p>
         <p>Total pages with at least one level AA accessibility error: {{getPagesWithLevelAAErrors()}}</p>
@@ -18,7 +18,7 @@
         <li *ngFor="let error of getTop10Errors()">{{error[0]}}: {{error[1]}} occurrences</li>
         </ul>
     </div> -->
-
+    <h3>Monitored Pages</h3>
     <table>
         <thead>
             <tr>

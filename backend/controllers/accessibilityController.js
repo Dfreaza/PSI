@@ -4,6 +4,7 @@ const Website = require('../models/website');
 const { QualWeb } = require('@qualweb/core');
 const { generateEARLReport } = require('@qualweb/earl-reporter');
 const { url } = require('inspector');
+const Statistics = require('../models/statistics');
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const websiteId = req.body.website._id;
@@ -17,6 +18,12 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
     await qualweb.start(clusterOptions, launchOptions);
 
     try {
+        //variaveis para as estatisticas
+        let errorCodes = [];
+        let hasErrorsA = false;
+        let hasErrorsAA = false;
+        let hasErrorsAAA = false;
+
         // Fetch website details from database based on websiteId
         const website = await Website.findOne({ _id: websiteId });
 
@@ -46,6 +53,66 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 console.error('Error during QualWeb evaluation:', error);
                 throw error;
             }
+
+            // Extract the errors from the evaluation
+            let errors = [];
+            for (const moduleName of Object.keys(report[page.url]?.modules || {})) {
+                // Skip the 'best-practices' module
+                if (moduleName === 'best-practices') {
+                    continue;
+                }
+                const module = report[page.url].modules[moduleName];
+                console.log("Ver os erros ", module.metadata.failed);
+
+                console.log(`Checking module ${moduleName} for errors`);
+
+                // Check if module.assertions is iterable
+                if (module.assertions && typeof module.assertions === 'object') {
+                    // Iterate over the properties of module.assertions
+                    for (const assertionName of Object.keys(module.assertions)) {
+                        const assertion = module.assertions[assertionName];
+                        if(assertion.metadata.outcome === 'failed') {
+                            
+                            errors.push(assertion);
+                            errorCodes.push(assertion.code);
+
+                            for(let criteria of assertion.metadata['success-criteria']) {
+                                let level = criteria.level;
+                                if(level === 'A') {
+                                    hasErrorsA = true;
+                                } else if(level === 'AA') {
+                                    hasErrorsAA = true;
+                                } else if(level === 'AAA') {    
+                                    hasErrorsAAA = true;
+                              }
+                            } 
+
+                        }
+                    }
+                } else {
+                    console.log(`module.assertions is not iterable for module ${moduleName}`);
+                }
+            }
+
+            // Create a new Statistics object for the page
+            const statistics = new Statistics({
+                idWebsite: website._id,
+                idPage: page._id,
+                hasErros: errors.length > 0,
+                hasErrosA: hasErrorsA,
+                hasErrosAA: hasErrorsAA,
+                hasErrosAAA: hasErrorsAAA,
+                errorList: errorCodes,
+            });
+        
+            // Save the Statistics object to the database
+            try {
+                await statistics.save();
+                console.log('Statistics saved successfully');
+            } catch (err) {
+                console.error('Error saving statistics:', err);
+            }
+
 
             console.log('Report:', report);
 
@@ -102,6 +169,9 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
         // Save the website document with the updated pages and status
         await website.save();
+
+
+        qualweb.act
 
         // Stop QualWeb
         await qualweb.stop();
