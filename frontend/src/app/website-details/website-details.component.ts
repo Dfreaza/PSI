@@ -14,6 +14,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class WebsiteDetailsComponent implements OnInit{
 
+  pagesWithoutErrors: number = 0;
+
   constructor(private route: ActivatedRoute, private router: Router, private websiteService: WebsiteService, private websiteComponent: WebsiteComponent) { }
 
   website = {} as IWebsite;
@@ -34,6 +36,7 @@ export class WebsiteDetailsComponent implements OnInit{
       }
     });
   }
+  
 
   choosePage(id: number){
     this.page = this.pages.find(p => p.id === id) as IPage;
