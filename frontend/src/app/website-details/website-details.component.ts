@@ -5,6 +5,7 @@ import { Router } from '@angular/router'
 import { WebsiteViewComponent } from '../website-view/website-view.component';
 import { IWebsite } from '../website';
 import { IPage } from '../page';
+import { Statistic } from '../statistic';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -25,14 +26,59 @@ export class WebsiteDetailsComponent implements OnInit{
   cboxCheck: boolean = false;
   website_id = 0;
   conformity = "NA";
+  statistics = {} as Statistic[];
+
+  //Statistics valores
+  numDePaginasAvaliadas!: number;
+  numDePaginasSemErros!: number;
+  numDePaginasComErros!: number;
+  numDePaginasComErrosA!: number;
+  numDePaginasComErrosAA!: number;
+  numDePaginasComErrosAAA!: number;
+  listOfErrors: Record<string, number> = {};
+
+  //Statistics percentages
+  percentSemErros: number | undefined;
+  percentComErros: number | undefined;
+  percentComErrosA: number | undefined;
+  percentComErrosAA: number | undefined;
+  percentComErrosAAA: number | undefined;
+  top10Errors: [string, number][] = [];
+
 
   ngOnInit() {
+
+    //valores para as estatisticas
+    this.numDePaginasAvaliadas = this.statistics.length;
+    this.numDePaginasSemErros = 0;
+    this.numDePaginasComErros = 0;
+    this.numDePaginasComErrosA = 0;
+    this.numDePaginasComErrosAA = 0;
+    this.numDePaginasComErrosAAA = 0;
+    this.listOfErrors = {};
+    this.top10Errors = [];
+    
+    //percentagens para as estatisticas
+    this.percentSemErros = 0;
+    this.percentComErros = 0;
+    this.percentComErrosA = 0;
+    this.percentComErrosAA = 0;
+    this.percentComErrosAAA = 0;
+
+
     const id = this.route.snapshot.paramMap.get('id')!;
     this.websiteService.getWebsite(id).subscribe((website: any | null) => {
       if (website) {
         this.website = website;
         this.pages = website.pages;
         this.website_id = website.id;
+        console.log("WebsiteId: ", id);
+        if(website.status === "Avaliado"){
+          this.websiteService.getStatistics(id).subscribe((statistics: any | null) => {
+            this.statistics = statistics;
+            this.updateStatistics();
+          });
+        }
       }
     });
   }
@@ -45,7 +91,50 @@ export class WebsiteDetailsComponent implements OnInit{
       }
     });
   }
-  
+
+  updateStatistics(){
+    this.numDePaginasAvaliadas = this.statistics.length;
+
+
+    this.statistics.forEach((statistic: Statistic, index: number) => {
+      if(statistic.hasErros === false){
+       this.numDePaginasSemErros++;
+      }else{
+        this.numDePaginasComErros++;
+      }
+
+      if(statistic.hasErrosA === true){
+        this.numDePaginasComErrosA++;
+      }
+      if(statistic.hasErrosAA === true){
+        this.numDePaginasComErrosAA++;
+      }
+      if(statistic.hasErrosAAA === true){
+        this.numDePaginasComErrosAAA++;
+      }
+
+      for (var i = 0; i < statistic.errorList.length; i++){
+        let error = statistic.errorList[i];
+      
+        if (this.top10Errors.hasOwnProperty(error)) {
+          this.listOfErrors[error]++;
+        } else {
+          this.listOfErrors[error] = 1;
+        }
+      }
+    });
+
+    this.percentSemErros = (this.numDePaginasSemErros / this.numDePaginasAvaliadas) * 100;
+    this.percentComErros = (this.numDePaginasComErros / this.numDePaginasAvaliadas) * 100;
+    this.percentComErrosA = (this.numDePaginasComErrosA / this.numDePaginasAvaliadas) * 100;
+    this.percentComErrosAA = (this.numDePaginasComErrosAA / this.numDePaginasAvaliadas) * 100;
+    this.percentComErrosAAA = (this.numDePaginasComErrosAAA / this.numDePaginasAvaliadas) * 100;  
+    
+    let entries = Object.entries(this.listOfErrors);
+    entries.sort((a, b) => b[1] - a[1]);
+
+    this.top10Errors = entries.slice(0, 10);
+  }
 
   choosePage(id: number){
     this.page = this.pages.find(p => p.id === id) as IPage;

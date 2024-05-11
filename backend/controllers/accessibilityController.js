@@ -8,9 +8,10 @@ const reportService = require('./reportService'); // Import the service fil
 
 exports.getStatistics = async (req, res) => {
     try {
-        const statistics = await Statistics.find({ websiteId: req.params.websiteId });
+        const statistics = await Statistics.find({ idWebsite: req.params.websiteId });
         res.json(statistics);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: err.message });
     }
 };

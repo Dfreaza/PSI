@@ -28,31 +28,13 @@ export class WebsiteService {
     });
   }
 
-  evaluatePages(website: IWebsite, pages: IPage[]): Observable<String[] | null> {
-    return this.http.patch<String[]>(`${this.apiUrl}/api/evaluate`, { website, pages });
-  }
-
+  //websites functions
   changeCurrentWebsite(website: IWebsite) {
     this.currentWebsite.next(website);
   }
 
   getCurrentWebsite(): Observable<IWebsite | null> {
     return of(this.currentWebsiteValue);
-  }
-
-  addPagesToWebsite(selectedWebsite: string, pages: string[]) {
-    return this.http.post(`${this.getWebsite(selectedWebsite)}/addPages`, { url: selectedWebsite, pageUrls: pages });
-  }
-
-  addPageToWebsite(page: IPage): Observable<IWebsite> {
-    return this.currentWebsite$.pipe(
-      take(1),
-      filter((website: IWebsite | null): website is IWebsite => website !== null),
-      switchMap((website: IWebsite) => {
-        website.pages.push(page);
-        return this.http.put<IWebsite>(`${this.apiUrl}/api/websites/${website._id}`, { page });
-      })
-    );
   }
 
   addWebsite(website: IWebsite): Observable<IWebsite>{
@@ -67,6 +49,28 @@ export class WebsiteService {
     return this.http.get(`${this.apiUrl}/api/websites/${id}`);
   }
 
+  deleteWebsite(website: IWebsite): Observable<IWebsite>{
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {_id: website._id},
+    };
+    return this.http.delete<IWebsite>(`${this.apiUrl}/api/websites`, options);
+  }
+
+  //Pages functions
+  addPageToWebsite(page: IPage): Observable<IWebsite> {
+    return this.currentWebsite$.pipe(
+      take(1),
+      filter((website: IWebsite | null): website is IWebsite => website !== null),
+      switchMap((website: IWebsite) => {
+        website.pages.push(page);
+        return this.http.put<IWebsite>(`${this.apiUrl}/api/websites/${website._id}`, { page });
+      })
+    );
+  }
+
   getPages(id: string) {
     return this.http.get(`${this.apiUrl}/api/websites/${id}/pages`);
   }
@@ -79,16 +83,6 @@ export class WebsiteService {
     return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
   }
 
-  deleteWebsite(website: IWebsite): Observable<IWebsite>{
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {_id: website._id},
-    };
-    return this.http.delete<IWebsite>(`${this.apiUrl}/api/websites`, options);
-  }
-
   deletePage(page: IPage, website: IWebsite): Observable<IPage>{
     const options = {
       headers: new HttpHeaders({
@@ -98,5 +92,17 @@ export class WebsiteService {
     };
     return this.http.delete<IPage>(`${this.apiUrl}/api/websites/pages`, options);
   }
+
+  //evaluation functions
+  evaluatePages(website: IWebsite, pages: IPage[]): Observable<String[] | null> {
+    return this.http.patch<String[]>(`${this.apiUrl}/api/evaluate`, { website, pages });
+  }
+
+  getStatistics(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/statistics/${id}`);
+  }
+
+
+
 }
   
