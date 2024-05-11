@@ -1,7 +1,7 @@
 # PSI
 
 Coisas Para Corrigir:
-- Tanto o delete pages e o evaluate selected pages, não atualizam a tabela quando clico no botão, dando reload da pagina o delete atualiza tabela mas o evaluate não. Para atualizar o evaluate preciso de ir para as tabelas de websites e voltar para o website que eu fiz o evaluate.  
+- Tanto o delete pages e o evaluate selected pages, não atualizam a tabela quando clico no botão, dando reload da pagina o delete atualiza tabela mas o evaluate não. Para atualizar o evaluate preciso de ir para as tabelas de websites e voltar para o website que eu fiz o evaluate.
 
 - componente para a estatísticas do website ? 
 

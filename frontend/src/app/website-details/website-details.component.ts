@@ -36,6 +36,15 @@ export class WebsiteDetailsComponent implements OnInit{
       }
     });
   }
+
+  updatePages() {
+    const id = this.route.snapshot.paramMap.get('id')!;
+    this.websiteService.getWebsite(id).subscribe((website: any | null) => {
+      if (website) {
+        this.pages = website.pages;
+      }
+    });
+  }
   
 
   choosePage(id: number){
@@ -116,6 +125,7 @@ export class WebsiteDetailsComponent implements OnInit{
         if( page !== null){
           this.websiteService.deletePage(page, this.website).subscribe((res) => {
             console.log(res);
+            this.updatePages();
           });
         }       
       }

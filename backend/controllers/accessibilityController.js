@@ -4,6 +4,16 @@ const Website = require('../models/website');
 const { QualWeb } = require('@qualweb/core');
 const { url } = require('inspector');
 const Statistics = require('../models/statistics');
+
+exports.getStatistics = async (req, res) => {
+    try {
+        const statistics = await Statistics.find({ websiteId: req.params.websiteId });
+        res.json(statistics);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 const reportService = require('./reportService'); // Import the service file
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
@@ -18,7 +28,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
     await qualweb.start(clusterOptions, launchOptions);
 
     try {
-        //variables for statistics
+        //variaveis para as estatisticas
         let errorCodes = [];
         let hasErrorsA = false;
         let hasErrorsAA = false;
@@ -37,6 +47,13 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
         // Initiate accessibility evaluation for each page using QualWeb core
         const evaluationResults = await Promise.all(pages.map(async (pageObject) => {
+            
+            //variaveis para as estatisticas
+            let errorCodes = [];
+            let hasErrorsA = false;
+            let hasErrorsAA = false;
+            let hasErrorsAAA = false;
+
             const page = website.pages.find(page => page.url === pageObject.url);
 
             if (!page) {
@@ -62,7 +79,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
             // Extract the errors from the evaluation
             let errors = [];
-            for (const moduleName of Object.keys(report[page.url]?.modules || {})) {
+            for (const moduleName of Object.keys(report[page.url].modules)) {
                 // Skip the 'best-practices' module
                 if (moduleName === 'best-practices') {
                     continue;

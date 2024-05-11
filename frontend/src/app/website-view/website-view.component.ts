@@ -28,6 +28,12 @@ export class WebsiteViewComponent implements OnInit{
     });
   }
 
+  updateWebsites() {
+    this.websiteService.getWebsites().subscribe((webs: IWebsite[]) => {
+      this.websites = webs;
+    });
+  }
+
   sortSub(ascendingOrder: boolean){
 
     if(ascendingOrder){
@@ -105,6 +111,7 @@ export class WebsiteViewComponent implements OnInit{
     if (website !== null){
       this.websiteService.deleteWebsite(website).subscribe((res) => {
         console.log(res);
+        this.updateWebsites();
       });
     }
   }

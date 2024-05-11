@@ -97,30 +97,27 @@ exports.deletePage = (req, res) => {
   Website.findOne({ _id: req.body.webId })
   .then(website => {
       if (website) {
+        const page = website.pages.id(req.body.page);
+        if(page.status === 'Avaliado'){
+          // Delete the statistics for the page
+          Statistics.deleteMany({ idPage: req.body.page })
+          .then(() => {
+            console.log('Statistics by page id deleted successfully');
+          })
+          .catch(err => {
+            console.error('Error deleting statistics by page id:', err);
+            res.status(500).send(err);
+          });
+        }
           website.pages.remove(req.body.page);
           website.save()
             .then(() => {
-              if(page.status === 'Avaliado'){
-                // Delete the statistics for the page
-                Statistics.deleteMany({ idPage: req.body.page })
-                .then(() => {
-                  console.log('Statistics by page id deleted successfully');
-                  res.status(200).json("Page Removed Successfully!");
-                })
-                .catch(err => {
-                  console.error('Error deleting statistics by page id:', err);
-                  res.status(500).send(err);
-                });
-              } else {
-                res.status(200).json("Page Removed Successfully!");
-              }
-            })
-            .catch(err => {
-              console.error('Error saving website:', err);
-              res.status(500).send(err);
-            });
+            res.status(200).json("Page Removed Sucessfully!");
+        })
+
+
       } else {
-        res.status(404).send("Website not found");
+      res.status(404).send("Website not found");
       }
   })
   .catch(err => {
