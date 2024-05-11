@@ -4,6 +4,7 @@ const Website = require('../models/website');
 const { QualWeb } = require('@qualweb/core');
 const { url } = require('inspector');
 const Statistics = require('../models/statistics');
+const reportService = require('./reportService'); // Import the service fil
 
 exports.getStatistics = async (req, res) => {
     try {
@@ -14,7 +15,6 @@ exports.getStatistics = async (req, res) => {
     }
 };
 
-const reportService = require('./reportService'); // Import the service file
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const websiteId = req.body.website._id;
@@ -28,12 +28,6 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
     await qualweb.start(clusterOptions, launchOptions);
 
     try {
-        //variaveis para as estatisticas
-        let errorCodes = [];
-        let hasErrorsA = false;
-        let hasErrorsAA = false;
-        let hasErrorsAAA = false;
-
         // Fetch website details from database based on websiteId
         const website = await Website.findOne({ _id: websiteId });
 
@@ -45,6 +39,8 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         website.status = 'Em avaliação';
         await website.save();
 
+        console.log(`Evaluating ${pages.length} pages:`, pages);
+
         // Initiate accessibility evaluation for each page using QualWeb core
         const evaluationResults = await Promise.all(pages.map(async (pageObject) => {
             
@@ -55,6 +51,9 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             let hasErrorsAAA = false;
 
             const page = website.pages.find(page => page.url === pageObject.url);
+
+
+            console.log(`Evaluating page: ${pageObject.url}`);
 
             if (!page) {
                 console.log(`Page not found: ${pageObject.url}`);
@@ -72,6 +71,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             let report;
             try {
                 report = await qualweb.evaluate(qualwebOptions);
+                console.log(`Evaluation result for ${pageObject.url}:`, report);
             } catch (error) {
                 console.error('Error during QualWeb evaluation:', error);
                 throw error;
@@ -79,41 +79,49 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
             // Extract the errors from the evaluation
             let errors = [];
-            for (const moduleName of Object.keys(report[page.url].modules)) {
-                // Skip the 'best-practices' module
-                if (moduleName === 'best-practices') {
-                    continue;
-                }
-                const module = report[page.url].modules[moduleName];
-                console.log("Ver os erros ", module.metadata.failed);
-
-                console.log(`Checking module ${moduleName} for errors`);
-
-                // Check if module.assertions is iterable
-                if (module.assertions && typeof module.assertions === 'object') {
-                    // Iterate over the properties of module.assertions
-                    for (const assertionName of Object.keys(module.assertions)) {
-                        const assertion = module.assertions[assertionName];
-                        if (assertion.metadata.outcome === 'failed') {
-
-                            errors.push(assertion);
-                            errorCodes.push(assertion.code);
-
-                            for (let criteria of assertion.metadata['success-criteria']) {
-                                let level = criteria.level;
-                                if (level === 'A') {
-                                    hasErrorsA = true;
-                                } else if (level === 'AA') {
-                                    hasErrorsAA = true;
-                                } else if (level === 'AAA') {
-                                    hasErrorsAAA = true;
-                                }
-                            }
-
-                        }
+            console.log("ver a pagina ", page.url);
+            const pageReport = report[page.url];
+            if(pageReport === undefined){
+                console.log("Não foi possivel avaliar a página ", page.url);
+            }
+            else{
+                const modules = pageReport.modules;
+                for (const moduleName of Object.keys(modules)) {
+                    // Skip the 'best-practices' module
+                    if (moduleName === 'best-practices') {
+                        continue;
                     }
-                } else {
-                    console.log(`module.assertions is not iterable for module ${moduleName}`);
+                    const module = report[page.url].modules[moduleName];
+                    //console.log("Ver os erros ", module.metadata.failed);
+
+                    //console.log(`Checking module ${moduleName} for errors`);
+
+                    // Check if module.assertions is iterable
+                    if (module.assertions && typeof module.assertions === 'object') {
+                        // Iterate over the properties of module.assertions
+                        for (const assertionName of Object.keys(module.assertions)) {
+                            const assertion = module.assertions[assertionName];
+                            if (assertion.metadata.outcome === 'failed') {
+
+                                errors.push(assertion);
+                                errorCodes.push(assertion.code);
+
+                                for (let criteria of assertion.metadata['success-criteria']) {
+                                    let level = criteria.level;
+                                    if (level === 'A') {
+                                        hasErrorsA = true;
+                                    } else if (level === 'AA') {
+                                        hasErrorsAA = true;
+                                    } else if (level === 'AAA') {
+                                        hasErrorsAAA = true;
+                                    }
+                                }
+
+                            }
+                        }
+                    } else {
+                        console.log(`module.assertions is not iterable for module ${moduleName}`);
+                    }
                 }
             }
 
@@ -145,7 +153,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             const reportId = await reportService.saveReportToDatabase(report);
             page.reportId = reportId;
 
-            console.log(report);
+            console.log("report ", report);
 
             page.evaluationResult = report;
             if (report && report.errors) {
