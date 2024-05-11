@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const Website = require('../models/website');
 const { QualWeb } = require('@qualweb/core');
-const { generateEARLReport } = require('@qualweb/earl-reporter');
 const { url } = require('inspector');
 const Statistics = require('../models/statistics');
+const reportService = require('./reportService'); // Import the service file
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const websiteId = req.body.website._id;
@@ -18,7 +18,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
     await qualweb.start(clusterOptions, launchOptions);
 
     try {
-        //variaveis para as estatisticas
+        //variables for statistics
         let errorCodes = [];
         let hasErrorsA = false;
         let hasErrorsAA = false;
@@ -77,21 +77,21 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                     // Iterate over the properties of module.assertions
                     for (const assertionName of Object.keys(module.assertions)) {
                         const assertion = module.assertions[assertionName];
-                        if(assertion.metadata.outcome === 'failed') {
-                            
+                        if (assertion.metadata.outcome === 'failed') {
+
                             errors.push(assertion);
                             errorCodes.push(assertion.code);
 
-                            for(let criteria of assertion.metadata['success-criteria']) {
+                            for (let criteria of assertion.metadata['success-criteria']) {
                                 let level = criteria.level;
-                                if(level === 'A') {
+                                if (level === 'A') {
                                     hasErrorsA = true;
-                                } else if(level === 'AA') {
+                                } else if (level === 'AA') {
                                     hasErrorsAA = true;
-                                } else if(level === 'AAA') {    
+                                } else if (level === 'AAA') {
                                     hasErrorsAAA = true;
-                              }
-                            } 
+                                }
+                            }
 
                         }
                     }
@@ -110,7 +110,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 hasErrosAAA: hasErrorsAAA,
                 errorList: errorCodes,
             });
-        
+
             // Save the Statistics object to the database
             try {
                 await statistics.save();
@@ -119,47 +119,26 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 console.error('Error saving statistics:', err);
             }
 
-
-            console.log('Report:', report);
-
             // Check if report is null
             if (report === null) {
                 console.log('Report is null');
             }
 
-            // Generate EARL report
-            const earlOptions = {};
-            let earlReport;
-            try {
-                earlReport = generateEARLReport(report, earlOptions);
-            } catch (error) {
-                console.error('Error during EARL report generation:', error);
-                throw error;
-            }
-
-            console.log('EARL Report:', earlReport);
-
-            // Check if EARL report is null
-            if (earlReport === null) {
-                console.log('EARL Report is null');
-            }
-
-            // Save the reports as properties of the page object
-            page.report = JSON.stringify(report);
-            page.earlReport = JSON.stringify(earlReport);
+            // Save the report as a property of the page object
+            const reportId = await reportService.saveReportToDatabase(report);
+            page.reportId = reportId;
 
             console.log(report);
-            console.log(earlReport);
 
-            page.evaluationResult = earlReport;
-            if (earlReport && earlReport.errors) {
-                page.conformity = earlReport.errors.length === 0 ? 'Conforme' : 'Não conforme';
+            page.evaluationResult = report;
+            if (report && report.errors) {
+                page.conformity = report.errors.length === 0 ? 'Conforme' : 'Não conforme';
             } else {
-                console.log('EARL report or errors is undefined');
+                console.log('Report or errors is undefined');
                 page.conformity = 'Conforme';
             }
             page.status = 'Avaliado';
-            return earlReport;
+            return report;
         }));
 
         // Check if any page has status 'Erro na avaliação'
@@ -177,9 +156,6 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
         // Save the website document with the updated pages and status
         await website.save();
-
-
-        qualweb.act
 
         // Stop QualWeb
         await qualweb.stop();

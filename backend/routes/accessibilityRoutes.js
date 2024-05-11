@@ -1,5 +1,6 @@
 const express = require('express');
 const accessibilityController = require('../controllers/accessibilityController');
+const reportService = require('../controllers/reportService');
 
 const router = express.Router();
 
