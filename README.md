@@ -3,7 +3,13 @@
 Coisas Para Corrigir:
 - Tanto o delete pages e o evaluate selected pages, não atualizam a tabela quando clico no botão, dando reload da pagina o delete atualiza tabela mas o evaluate não. Para atualizar o evaluate preciso de ir para as tabelas de websites e voltar para o website que eu fiz o evaluate.
 
-- componente para a estatísticas do website ? 
+Coisas que faltam no user 6:
+- quando faz delete Atualiza os valores, o mesmo para quando avalia mais paginas
+
+-Modificar o status da pagina para quando elimino todas as paginas que que foram avaliadas
+porque o website deixa de ser avaliado.
+
+-Css da pagina como no qualWeb
 
 Para Correr No AppServer:
 
