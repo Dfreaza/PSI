@@ -37,6 +37,12 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 return { error: `Page not found: ${pageObject.url}` };
             }
 
+            // Check if the page has already been evaluated
+            if (page.status === 'Avaliado') {
+                console.log(`Page already evaluated: ${page.url}`);
+                return console.log(`Page already evaluated: ${page.url}`);
+            }
+
             // Execute accessibility evaluation
             const qualwebOptions = { url: page.url };
             let report;
@@ -75,7 +81,9 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             page.report = JSON.stringify(report);
             page.earlReport = JSON.stringify(earlReport);
 
-            console.log('Page:', url, earlReport, report);
+            console.log(report);
+            console.log(earlReport);
+
             page.evaluationResult = earlReport;
             if (earlReport && earlReport.errors) {
                 page.conformity = earlReport.errors.length === 0 ? 'Conforme' : 'Não conforme';
