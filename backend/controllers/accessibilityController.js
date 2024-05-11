@@ -192,5 +192,33 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             page.conformity = 'Conforme';
         }
         page.status = 'Avaliado';
+
+        const updatedData = {
+            reportId: page.reportId,
+            evaluationResult: page.evaluationResult,
+            conformity: page.conformity,
+            status: page.status,
+        };
+        const updatedPageData = await updatePageData(website._id, page._id, updatedData);
+        console.log('Updated page data:', updatedPageData);
+
         return report;
     }
+
+    // In your backend
+async function updatePageData(websiteId, pageId, updatedData) {
+    // Find the website in the database
+    const website = await Website.findById(websiteId);
+
+    // Find the specific page in the website's pages
+    const page = website.pages.id(pageId);
+
+    // Update the page with the new data
+    page.set(updatedData);
+
+    // Save the updated website document
+    const updatedWebsite = await website.save();
+
+    // Return the updated page data
+    return updatedWebsite.pages.id(pageId);
+}

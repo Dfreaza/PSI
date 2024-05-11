@@ -155,17 +155,30 @@ export class WebsiteDetailsComponent implements OnInit{
 
   evaluateSelectedPages() {
     const selectedPages = this.website.pages.filter(page => page.selected);
+
+      // Set the status of each selected page to 'Em avaliação'
+      selectedPages.forEach(page => {
+        if (page.status !== 'Avaliado') {
+          page.status = 'Em avaliação';
+        }
+      });
+
     this.websiteService.evaluatePages(this.website, selectedPages).subscribe((evaluationResults: String[] | null) => {
-      console.log('evaluationResults:', evaluationResults); // Add this line
+      console.log('evaluationResults:', evaluationResults);
       if (evaluationResults) {
         for (let i = 0; i < selectedPages.length; i++) {
           selectedPages[i].conformity = evaluationResults[i];
           console.log("Page " + selectedPages[i].id + " evaluated with conformity: " + selectedPages[i].conformity);
+
+          // Update the status of the page based on the evaluation result
+          if (evaluationResults[i] === 'Erro na avaliação') {
+            selectedPages[i].status = 'Erro na avaliação';
+          } else {
+            selectedPages[i].status = 'Avaliado';
+          }
         }
       }
     });
-    this.conformity = "Evaluation done"; // tem que ser mudado para os valores da avaliação
-    this.status = "Avaliado";
     console.log("Evaluation done");
   }
 
