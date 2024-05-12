@@ -7,8 +7,9 @@ const PageSchema = new mongoose.Schema({
   appraisalDate: {type: Date, default: Date.now},
   conformity: { type: String, default: 'NA' },
   status: { type: String, default: 'Por avaliar' },
-  reportid: Number,
-});
+  reportid: {type: Number, default: 0},},
+  { versionKey: false }
+);
 
 const Page = mongoose.model('Page', PageSchema);
 

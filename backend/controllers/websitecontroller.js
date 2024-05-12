@@ -28,7 +28,7 @@ exports.getWebsite = (req, res) => {
     });
 };
 
-exports.updateWebsite = (req, res) => {
+exports.AddPageToWebsite = (req, res) => {
   Website.findOne({ _id: req.params.WebsiteId })
   .then(website => {
     if (website) {
@@ -53,6 +53,23 @@ exports.updateWebsite = (req, res) => {
     console.log(err);
     res.status(500).send(err);
   });
+};
+
+exports.updateWebsiteStatus = async (req, res) => {
+  const { WebsiteId } = req.params;
+  const { status } = req.body;
+
+  try {
+    const updatedWebsite = await Website.findByIdAndUpdate(WebsiteId, { status: status }, { new: true });
+
+    if (!updatedWebsite) {
+      return res.status(404).json({ message: 'Website not found' });
+    }
+
+    res.json(updatedWebsite);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.getAllWebsites = (req, res) => {
@@ -93,23 +110,26 @@ exports.deleteWebsite = (req, res) => {
   });
 };
 
-exports.deletePage = (req, res) => {
+exports.deletePages = (req, res) => {
   Website.findOne({ _id: req.body.webId })
   .then(website => {
       if (website) {
-        const page = website.pages.id(req.body.page);
-        if(page.status === 'Avaliado'){
-          // Delete the statistics for the page
-          Statistics.deleteMany({ idPage: req.body.page })
-          .then(() => {
-            console.log('Statistics by page id deleted successfully');
-          })
-          .catch(err => {
-            console.error('Error deleting statistics by page id:', err);
-            res.status(500).send(err);
-          });
+
+        for(const page of req.body.pages) {
+          website.pages.remove(page)
+
+          if(page.status === 'Avaliado'){
+            // Delete the statistics for the page
+            Statistics.findOneAndDelete({ idPage: page._id })
+            .then(() => {
+              console.log('Statistics by page id deleted successfully');
+            })
+            .catch(err => {
+              console.error('Error deleting statistics by page id:', err);
+              res.status(500).send(err);
+            });
+          }
         }
-          website.pages.remove(req.body.page);
           website.save()
             .then(() => {
             res.status(200).json("Page Removed Sucessfully!");

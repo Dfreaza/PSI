@@ -7,6 +7,7 @@ import { IWebsite } from '../website';
 import { IPage } from '../page';
 import { Statistic } from '../statistic';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-website-details',
@@ -27,6 +28,8 @@ export class WebsiteDetailsComponent implements OnInit{
   website_id = 0;
   conformity = "NA";
   statistics = {} as Statistic[];
+
+  websiteStatus = new BehaviorSubject<string>('');
 
   //Statistics valores
   numDePaginasAvaliadas!: number;
@@ -49,7 +52,7 @@ export class WebsiteDetailsComponent implements OnInit{
   ngOnInit() {
 
     //valores para as estatisticas
-    this.numDePaginasAvaliadas = this.statistics.length;
+    this.numDePaginasAvaliadas = 0;
     this.numDePaginasSemErros = 0;
     this.numDePaginasComErros = 0;
     this.numDePaginasComErrosA = 0;
@@ -72,11 +75,12 @@ export class WebsiteDetailsComponent implements OnInit{
         this.website = website;
         this.pages = website.pages;
         this.website_id = website.id;
-        console.log("WebsiteId: ", id);
+        this.websiteStatus.next(website.status);
+        this.verifyStatus();
         if(website.status === "Avaliado"){
           this.websiteService.getStatistics(id).subscribe((statistics: any | null) => {
             this.statistics = statistics;
-            this.updateStatistics();
+            this.createStatistics();
           });
         }
       }
@@ -88,11 +92,40 @@ export class WebsiteDetailsComponent implements OnInit{
     this.websiteService.getWebsite(id).subscribe((website: any | null) => {
       if (website) {
         this.pages = website.pages;
+        this.verifyStatus();
       }
     });
   }
 
-  updateStatistics(){
+  updateStatistics() {
+    //valores para as estatisticas
+    this.numDePaginasAvaliadas = 0;
+    this.numDePaginasSemErros = 0;
+    this.numDePaginasComErros = 0;
+    this.numDePaginasComErrosA = 0;
+    this.numDePaginasComErrosAA = 0;
+    this.numDePaginasComErrosAAA = 0;
+    this.listOfErrors = {};
+    this.top10Errors = [];
+    
+    //percentagens para as estatisticas
+    this.percentSemErros = 0;
+    this.percentComErros = 0;
+    this.percentComErrosA = 0;
+    this.percentComErrosAA = 0;
+    this.percentComErrosAAA = 0;
+    
+
+    if(this.website.status === "Avaliado"){
+      const id = this.route.snapshot.paramMap.get('id')!;
+      this.websiteService.getStatistics(id).subscribe((statistics: any | null) => {
+        this.statistics = statistics;
+        this.createStatistics();
+      });
+    }
+  }
+
+  createStatistics(){
     this.numDePaginasAvaliadas = this.statistics.length;
 
 
@@ -154,7 +187,7 @@ export class WebsiteDetailsComponent implements OnInit{
   }
 
   evaluateSelectedPages() {
-    const selectedPages = this.website.pages.filter(page => page.selected);
+    const selectedPages = this.pages.filter(page => page.selected);
 
       // Set the status of each selected page to 'Em avaliação'
       selectedPages.forEach(page => {
@@ -163,8 +196,15 @@ export class WebsiteDetailsComponent implements OnInit{
         }
       });
 
-    this.websiteService.evaluatePages(this.website, selectedPages).subscribe((evaluationResults: String[] | null) => {
-      console.log('evaluationResults:', evaluationResults);
+    this.websiteService.evaluatePages(this.website, selectedPages).subscribe((evaluationResults: IWebsite | null) => {
+
+      if (evaluationResults) {
+        this.website = evaluationResults;
+        this.pages = evaluationResults.pages;
+      }
+
+
+/*       console.log("Evaluation results: ", evaluationResults)
       if (evaluationResults) {
         for (let i = 0; i < selectedPages.length; i++) {
           selectedPages[i].conformity = evaluationResults[i];
@@ -177,7 +217,10 @@ export class WebsiteDetailsComponent implements OnInit{
             selectedPages[i].status = 'Avaliado';
           }
         }
-      }
+      } */
+
+      this.verifyStatus();
+      this.updateStatistics();
     });
     console.log("Evaluation done");
   }
@@ -214,8 +257,37 @@ export class WebsiteDetailsComponent implements OnInit{
     return null;
   }
 
+  verifyStatus() {
+    let hasAvaliado = false;
+    
+    console.log("Verifying status: ", this.pages.length);
+    for (let page of this.pages) {
+      if (page.status === 'Avaliado') {
+        hasAvaliado = true;
+        break;
+      }
+    }
+  
+    if (!hasAvaliado || this.pages.length === 0) {
+      this.website.status = 'Por avaliar';
+      this.websiteStatus.next(this.website.status);
+      this.websiteService.updateWebsiteStatus(this.website, this.website.status).subscribe((res) => {
+      }
+      );}
+      else{
+        this.website.status = 'Avaliado';
+        this.websiteStatus.next(this.website.status);
+        this.websiteService.updateWebsiteStatus(this.website, this.website.status).subscribe((res) => {
+        }
+        );
+      
+      }
+    }
+  
+
   DeleteAllPages(){
     let array = document.querySelectorAll('.rowDel');
+    let listOfPages = [];
 
     for (var i = 0; i < array.length; i++){
       let a = array[i].children[0].firstChild as HTMLInputElement;
@@ -223,16 +295,21 @@ export class WebsiteDetailsComponent implements OnInit{
       if (a.checked === true){
         let text = array[i].children[1].textContent;
         let page = this.getPageFromUrl(text);
-
-        if( page !== null){
-          this.websiteService.deletePage(page, this.website).subscribe((res) => {
-            console.log(res);
-            this.updatePages();
-          });
-        }       
+        if(page !== null){
+          listOfPages.push(page);
+        }
+       
       }
     }
+    if(listOfPages.length > 0){
+      this.websiteService.deletePages(listOfPages, this.website).subscribe((res) => {
+        console.log(res);
+        this.updatePages();
+        this.updateStatistics();
+      });
+    }
   }
+  
 
   
 }

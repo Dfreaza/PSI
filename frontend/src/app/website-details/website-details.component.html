@@ -5,21 +5,22 @@
     <p>URL: {{showPath(website.url)}}</p>
     <p>Registration Date: {{showTime(website.submissionDate)}}</p>
     <p>Last Appraisal Date: {{showTime(website.appraisalDate)}}</p>
-
-    <div *ngIf="website.status === 'Avaliado'"> 
+    
+    <div *ngIf="(websiteStatus | async) === 'Avaliado'"> 
         <h3>Accessibility Indicators</h3>
         <p>Total pages without accessibility errors: {{percentSemErros}}% ({{numDePaginasSemErros}} pages)</p>
-<p>Total pages with at least one accessibility error: {{percentComErros}}% ({{numDePaginasComErros}} pages)</p>
-<p>Total pages with at least one level A accessibility error: {{percentComErrosA}}% ({{numDePaginasComErrosA}} pages)</p>
-<p>Total pages with at least one level AA accessibility error: {{percentComErrosAA}}% ({{numDePaginasComErrosAA}} pages)</p>
-<p>Total pages with at least one level AAA accessibility error: {{percentComErrosAAA}}% ({{numDePaginasComErrosAAA}} pages)</p>
+        <p>Total pages with at least one accessibility error: {{percentComErros}}% ({{numDePaginasComErros}} pages)</p>
+        <p>Total pages with at least one level A accessibility error: {{percentComErrosA}}% ({{numDePaginasComErrosA}} pages)</p>
+        <p>Total pages with at least one level AA accessibility error: {{percentComErrosAA}}% ({{numDePaginasComErrosAA}} pages)</p>
+        <p>Total pages with at least one level AAA accessibility error: {{percentComErrosAAA}}% ({{numDePaginasComErrosAAA}} pages)</p>
         <h3>Top 10 most common accessibility errors</h3>
         <ul>
         <li *ngFor="let error of top10Errors">{{error[0]}}</li>
         </ul>
     </div> 
-    <div *ngIf = "website.status !== 'Avaliado'">
+    <div *ngIf="(websiteStatus | async) !== 'Avaliado'">
         <h3>Ainda não tem paginas avaliadas</h3>
+        <p>Website Status: {{websiteStatus | async}}</p>
     </div>
     <h3>Monitored Pages</h3>
     <table>

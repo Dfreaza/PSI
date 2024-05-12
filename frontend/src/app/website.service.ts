@@ -37,6 +37,10 @@ export class WebsiteService {
     return of(this.currentWebsiteValue);
   }
 
+  updateWebsiteStatus(website: IWebsite, status: string): Observable<IWebsite> {
+    return this.http.put<IWebsite>(`${this.apiUrl}/api/websites/${website._id}/status`, { status: status });
+  }
+
   addWebsite(website: IWebsite): Observable<IWebsite>{
     return this.http.post<IWebsite>(`${this.apiUrl}/api/websites`, website);
   }
@@ -83,19 +87,19 @@ export class WebsiteService {
     return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
   }
 
-  deletePage(page: IPage, website: IWebsite): Observable<IPage>{
+  deletePages(pages: IPage[], website: IWebsite): Observable<IPage>{
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       }),
-      body: {page: page, webId: website._id},
+      body: {pages: pages, webId: website._id},
     };
     return this.http.delete<IPage>(`${this.apiUrl}/api/websites/pages`, options);
   }
 
   //evaluation functions
-  evaluatePages(website: IWebsite, pages: IPage[]): Observable<String[] | null> {
-    return this.http.patch<String[]>(`${this.apiUrl}/api/evaluate`, { website, pages });
+  evaluatePages(website: IWebsite, pages: IPage[]): Observable<IWebsite | null> {
+    return this.http.patch<IWebsite>(`${this.apiUrl}/api/evaluate`, { website, pages });
   }
 
   getStatistics(id: string): Observable<any> {

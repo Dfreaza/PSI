@@ -6,8 +6,9 @@ const router = express.Router();
 router.post('/api/websites', websiteController.createWebsite);
 router.get('/api/websites', websiteController.getAllWebsites);
 router.get('/api/websites/:websiteId', websiteController.getWebsite);
-router.put('/api/websites/:WebsiteId', websiteController.updateWebsite);
+router.put('/api/websites/:WebsiteId', websiteController.AddPageToWebsite);
+router.put('/api/websites/:WebsiteId/status', websiteController.updateWebsiteStatus);
 router.delete('/api/websites',websiteController.deleteWebsite);
-router.delete('/api/websites/pages', websiteController.deletePage);
+router.delete('/api/websites/pages', websiteController.deletePages);
 
 module.exports = router;

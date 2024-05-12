@@ -45,8 +45,9 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         // Initiate accessibility evaluation for each page using QualWeb core
         const evaluationResults = [];
         for (const pageObject of pages) {
-            const result = await evaluatePage(qualweb, website, pageObject);
-            evaluationResults.push(result);
+            // Dentro do loop for na função evaluateWebsiteAccessibility
+            const report = await evaluatePage(qualweb, website, pageObject);
+            evaluationResults.push(report);
         }
 
         // Check if any page has status 'Erro na avaliação'
@@ -66,7 +67,8 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
         // Stop QualWeb
         await qualweb.stop();
-
+        res.status(200).json(website);
+        
     } catch (error) {
         console.error('Error evaluating accessibility:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -83,7 +85,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         const page = website.pages.find(page => page.url === pageObject.url);
 
 
-        console.log(`Evaluating page: ${pageObject.url}`);
+        //console.log(`Evaluating page: ${pageObject.url}`);
 
         if (!page) {
             console.log(`Page not found: ${pageObject.url}`);
@@ -100,7 +102,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         let report;
         try {
             report = await qualweb.evaluate(qualwebOptions);
-            console.log(`Evaluation result for ${pageObject.url}:`, report);
+            //console.log(`Evaluation result for ${pageObject.url}:`, report);
         } catch (error) {
             console.error('Error during QualWeb evaluation:', error);
             throw error;
@@ -108,7 +110,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
 
         // Extract the errors from the evaluation
         let errors = [];
-        console.log("ver a pagina ", page.url);
+        //console.log("ver a pagina ", page.url);
         const pageReport = report[page.url];
         if (pageReport === undefined) {
             console.log("Não foi possivel avaliar a página ", page.url);
@@ -182,15 +184,16 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         const reportId = await reportService.saveReportToDatabase(report);
         page.reportId = reportId;
 
-        console.log("report ", report);
+        //console.log("report ", report);
 
         page.evaluationResult = report;
-        if (report && report.errors) {
-            page.conformity = report.errors.length === 0 ? 'Conforme' : 'Não conforme';
-        } else {
-            console.log('Report or errors is undefined');
-            page.conformity = 'Conforme';
+
+        if(!hasErrorsA && !hasErrorsAA){
+            page.conformity = 'conforme';
+        }else{
+            page.conformity = 'não conforme';
         }
+
         page.status = 'Avaliado';
 
         const updatedData = {
