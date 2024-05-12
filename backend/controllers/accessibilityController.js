@@ -22,9 +22,9 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
     const pages = req.body.pages; // Array of page URLs to evaluate
 
     // Create QualWeb instance
-    const plugins = { adBlock: true, stealth: true };
+    const plugins = { adBlock: false, stealth: true };
     const clusterOptions = { timeout: 60 * 1000 };
-    const launchOptions = {};
+    const launchOptions = {args: ['--no-sandbox', '--ignore-certificate-errors']};
     const qualweb = new QualWeb(plugins);
     await qualweb.start(clusterOptions, launchOptions);
 
