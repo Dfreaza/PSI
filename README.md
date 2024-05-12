@@ -6,10 +6,6 @@ Coisas Para Corrigir:
 Coisas que faltam no user 6:
 -Css da pagina como no qualWeb
 
-- quando apago uma pagina e faço evaluate o evaluate vai vazio
-
--verificar o conforme 
-
 Para Correr No AppServer:
 
 URL para ver o site: http://appserver.alunos.di.fc.ul.pt:3021/
