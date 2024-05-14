@@ -1,6 +1,7 @@
 const Website = require('../models/website');
 const Page = require('../models/page');
 const Statistics = require('../models/statistics');
+const DetailStatistics = require('../models/detailStatistics');
 
 exports.createWebsite = (req, res) => {
   const website = new Website({ url: req.body.url, pages: req.body.pageUrls || [] });
@@ -87,6 +88,7 @@ exports.deleteWebsite = (req, res) => {
   .then(website => {
     if (website) {
       if (website.status === 'Avaliado') {
+
         // Delete the statistics for the website
         Statistics.deleteMany({ idWebsite: website._id })
         .then(() => {
@@ -97,6 +99,16 @@ exports.deleteWebsite = (req, res) => {
           console.error('Error deleting statistics by website id:', err);
           res.status(500).send(err);
         });
+
+        // Delete the detail statistics for the website
+        DetailStatistics.deleteMany({ idWebsite: website._id })
+        .then(() => {
+          console.log('DetailStatistics by website id deleted successfully');
+        })
+        .catch(err => {
+          console.error('Error deleting detail statistics by website id:', err);
+        });
+
       } else {
         res.status(200).json(website);
       }
@@ -119,6 +131,7 @@ exports.deletePages = (req, res) => {
           website.pages.remove(page)
 
           if(page.status === 'Avaliado'){
+
             // Delete the statistics for the page
             Statistics.findOneAndDelete({ idPage: page._id })
             .then(() => {
@@ -128,6 +141,16 @@ exports.deletePages = (req, res) => {
               console.error('Error deleting statistics by page id:', err);
               res.status(500).send(err);
             });
+
+            // Delete the detail statistics for the page
+            DetailStatistics.findOneAndDelete({ idPage: page._id })
+            .then(() => {
+              console.log('DetailStatistics by page id deleted successfully');
+            })
+            .catch(err => {
+              console.error('Error deleting detail statistics by page id:', err);
+            });
+
           }
         }
           website.save()
