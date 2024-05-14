@@ -84,7 +84,7 @@ export class WebsiteService {
   }
 
   getWebsitePage(id: string, pageId: string) {
-    return this.http.get(`${this.apiUrl}/api/websites/${id}/pages/${pageId}`);
+    return this.http.get(`${this.apiUrl}/api/websites/${id}/${pageId}`);
   }
 
   deletePages(pages: IPage[], website: IWebsite): Observable<IPage>{
@@ -106,7 +106,9 @@ export class WebsiteService {
     return this.http.get<any>(`${this.apiUrl}/api/statistics/${id}`);
   }
 
-
+  getDetailStatistics(websiteId: string, pageId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/detailedStatistics/${websiteId}/${pageId}`);
+  }
 
 }
   

@@ -17,6 +17,16 @@ exports.getStatistics = async (req, res) => {
     }
 };
 
+exports.getDetailedStatistics = async (req, res) => {
+    try{
+        const detailsStatistics = await DetailStatistics.find({ idWebsite: req.params.websiteId, idPage: req.params.pageId });
+        res.json(detailsStatistics);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: err.message });
+    }
+};
+
 
 exports.evaluateWebsiteAccessibility = async (req, res) => {
     const websiteId = req.body.website._id;
@@ -179,10 +189,10 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         const detailStatistics = new DetailStatistics({
             idWebsite: website._id,
             idPage: page._id,
-            TotalPassedTests: passedTests,
-            TotalWarningTests: warningTests,
-            TotalFailedTests: failedTests,
-            TotalInapplicable: inapplicableTests,
+            totalPassedTests: passedTests,
+            totalWarningTests: warningTests,
+            totalFailedTests: failedTests,
+            totalInapplicableTests: inapplicableTests,
         });
 
         // Save the Statistics object to the database

@@ -11,10 +11,10 @@ const DetailStatisticsSchema = new mongoose.Schema({
       ref: 'Page',
       required: true
   },
-  TotalPassedTests: Number,
-  TotalWarningTests: Number,
-  TotalFailedTests: Number,
-  TotalInapplicable: Number,
+  totalPassedTests: Number,
+  totalWarningTests: Number,
+  totalFailedTests: Number,
+  totalInapplicableTests: Number,
   //TestsResults: [String],
 });
 
