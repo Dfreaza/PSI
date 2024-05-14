@@ -170,7 +170,7 @@ export class WebsiteDetailsComponent implements OnInit{
   }
 
   choosePage(id: number){
-    this.page = this.pages.find(p => p.id === id) as IPage;
+    this.page = this.pages.find(p => p._id === id) as IPage;
   }
 
   showPath(url: string) {

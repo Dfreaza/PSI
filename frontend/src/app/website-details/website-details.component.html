@@ -43,6 +43,7 @@
                 <td>{{showTime(page.appraisalDate)}}</td>
                 <td>{{page.status}}</td>
                 <td><input type="checkbox" [(ngModel)]="page.selected"></td>
+                <td *ngIf="(websiteStatus | async) === 'Avaliado'"><button [routerLink]="['/detail-statistics', page._id]">Statistics Details</button></td>
             </tr>
         </tbody>
     </table>

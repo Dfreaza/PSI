@@ -1,8 +1,8 @@
 export interface IPage{
+    _id: number;
     selected: boolean;
     appraisalDate: any;
     conformity: String;
-    id: number;
     website_id: number;
     url: string;
     status: string;
