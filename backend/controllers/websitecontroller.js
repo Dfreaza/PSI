@@ -29,6 +29,26 @@ exports.getWebsite = (req, res) => {
     });
 };
 
+exports.getPage = (req, res) => {
+  Website.findOne({ _id: req.params.websiteId })
+    .then(website => {
+      if (website) {
+        const page = website.pages.find(page => page._id == req.params.pageId);
+        if (page) {
+          res.status(200).json(page);
+        } else {
+          res.status(404).send("Page not found");
+        }
+      } else {
+        res.status(404).send("Website not found");
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+};
+
 exports.AddPageToWebsite = (req, res) => {
   Website.findOne({ _id: req.params.WebsiteId })
   .then(website => {
