@@ -9,6 +9,7 @@ import { WebsiteComponent } from './website/website.component';
 import { AddPageComponent } from './add-page/add-page.component';
 import { WebsiteViewComponent } from './website-view/website-view.component';
 import { WebsiteDetailsComponent } from './website-details/website-details.component';
+import { DetailStatisticsComponent } from './detail-statistics/detail-statistics.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { WebsiteDetailsComponent } from './website-details/website-details.compo
     AddPageComponent,
     WebsiteViewComponent,
     WebsiteDetailsComponent,
+    DetailStatisticsComponent,
   ],
   imports: [
     BrowserModule,
