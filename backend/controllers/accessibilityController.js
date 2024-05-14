@@ -4,6 +4,7 @@ const Website = require('../models/website');
 const { QualWeb } = require('@qualweb/core');
 const { url } = require('inspector');
 const Statistics = require('../models/statistics');
+const DetailStatistics = require('../models/detailStatistics');
 const reportService = require('./reportService'); // Import the service fil
 
 exports.getStatistics = async (req, res) => {
@@ -82,6 +83,11 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         let hasErrorsAA = false;
         let hasErrorsAAA = false;
 
+        let passedTests = 0;
+        let warningTests = 0;
+        let failedTests = 0;
+        let inapplicableTests = 0;
+
         const page = website.pages.find(page => page.url === pageObject.url);
 
 
@@ -125,7 +131,10 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 const module = report[page.url].modules[moduleName];
                 //console.log("Ver os erros ", module.metadata.failed);
 
-                //console.log(`Checking module ${moduleName} for errors`);
+                passedTests += module.metadata.passed;
+                warningTests += module.metadata.warning;
+                failedTests += module.metadata.failed;
+                inapplicableTests += module.metadata.inapplicable;
 
                 // Check if module.assertions is iterable
                 if (module.assertions && typeof module.assertions === 'object') {
@@ -167,10 +176,21 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             errorList: errorCodes,
         });
 
+        const detailStatistics = new DetailStatistics({
+            idWebsite: website._id,
+            idPage: page._id,
+            TotalPassedTests: passedTests,
+            TotalWarningTests: warningTests,
+            TotalFailedTests: failedTests,
+            TotalInapplicable: inapplicableTests,
+        });
+
         // Save the Statistics object to the database
         try {
             await statistics.save();
             console.log('Statistics saved successfully');
+            await detailStatistics.save();
+            console.log('DetailStatistics saved successfully');
         } catch (err) {
             console.error('Error saving statistics:', err);
         }
