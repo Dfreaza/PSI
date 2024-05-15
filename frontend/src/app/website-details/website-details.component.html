@@ -32,6 +32,7 @@
                 <th>Last Appraisal Date</th>
                 <th>Status</th>
                 <th>Select</th>
+                <th>Statistics Details</th>
 
             </tr>
         </thead>
@@ -48,6 +49,8 @@
         </tbody>
     </table>
     <button (click)="evaluateSelectedPages()">Evaluate Selected Pages</button>
-    <button  (click)="DeleteAllPages()">Delete Pages</button>
+    <button (click)="DeleteAllPages()">Delete Pages</button>
+    <button (click)="generateAccessibilityReport('PDF')">Create PDF Report</button>
+    <button (click)="generateAccessibilityReport('HTML')">Create HTML Report</button>
 </div>
 

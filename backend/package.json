@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fontsource/roboto": "^5.0.13",
     "@qualweb/core": "^0.7.70",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "mongoose": "^8.3.2"
+    "mongoose": "^8.3.2",
+    "pdfmake": "^0.2.10",
+    "pug": "^3.0.2"
   },
   "description": ""
 }

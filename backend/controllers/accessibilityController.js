@@ -5,7 +5,7 @@ const { QualWeb } = require('@qualweb/core');
 const { url } = require('inspector');
 const Statistics = require('../models/statistics');
 const DetailStatistics = require('../models/detailStatistics');
-const reportService = require('./reportService'); // Import the service fil
+const reportService = require('./reportController'); // Import the service fil
 
 exports.getStatistics = async (req, res) => {
     try {

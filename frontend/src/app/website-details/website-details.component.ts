@@ -309,6 +309,51 @@ export class WebsiteDetailsComponent implements OnInit{
       });
     }
   }
+
+  generateAccessibilityReport(format: 'PDF' | 'HTML') {
+    // Aggregate all the accessibility data
+    const reportData = {
+      website: this.website.url, // Add the website name or URL
+      numDePaginasAvaliadas: this.numDePaginasAvaliadas,
+      numDePaginasSemErros: this.numDePaginasSemErros,
+      numDePaginasComErros: this.numDePaginasComErros,
+      numDePaginasComErrosA: this.numDePaginasComErrosA,
+      numDePaginasComErrosAA: this.numDePaginasComErrosAA,
+      numDePaginasComErrosAAA: this.numDePaginasComErrosAAA,
+      percentSemErros: this.percentSemErros,
+      percentComErros: this.percentComErros,
+      percentComErrosA: this.percentComErrosA,
+      percentComErrosAA: this.percentComErrosAA,
+      percentComErrosAAA: this.percentComErrosAAA,
+      top10Errors: this.top10Errors,
+    };
+
+    // Call the backend service to export the report
+    this.websiteService.exportReport(reportData, format).subscribe((response: any) => {
+      // The backend now returns a URL to the report file
+      // If the response is an object, access the fileUrl property
+      const fileUrl = typeof response === 'string' ? response : response.fileUrl;
+
+      // Open the report in a new window
+      const newWindow = window.open(fileUrl);
+
+      // Check if the new window was successfully opened
+      if (newWindow) {
+        // Create a download link
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = fileUrl.split('/').pop() || 'default_filename';
+        link.style.display = 'none';
+
+        // Append the link to the new window's document body
+        newWindow.document.body.appendChild(link);
+        link.click();
+        newWindow.document.body.removeChild(link);
+      } else {
+        console.error('Could not open new window. Possibly due to a popup blocker.');
+      }
+    });
+  }
   
 
   

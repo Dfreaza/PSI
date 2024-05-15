@@ -110,5 +110,9 @@ export class WebsiteService {
     return this.http.get<any>(`${this.apiUrl}/api/detailedStatistics/${websiteId}/${pageId}`);
   }
 
+  exportReport(reportData: any, format: string) {
+    return this.http.post<string>(`${this.apiUrl}/api/reports/export?format=${format}`, reportData);
+  }
+
 }
   
