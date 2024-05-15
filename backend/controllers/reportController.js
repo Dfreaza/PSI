@@ -54,7 +54,7 @@ exports.generateReport = async (req, res) => {
             const printer = new PdfPrinter(fonts);
             const docDefinition = {
                 content: [
-                    { text: `Website: ${reportData.website}`, fontSize: 14, margin: [0, 0, 0, 10] },
+                    { text: `Website: ${reportData.website}`, fontSize: 14, bold: true, margin: [0, 0, 0, 10] },
                     { text: `Number of Pages Evaluated: ${reportData.numDePaginasAvaliadas}`, fontSize: 12 },
                     { text: `Number of Pages Without Errors: ${reportData.numDePaginasSemErros}`, fontSize: 12 },
                     { text: `Number of Pages With Errors: ${reportData.numDePaginasComErros}`, fontSize: 12 },
@@ -84,25 +84,56 @@ exports.generateReport = async (req, res) => {
             const pdfDoc = printer.createPdfKitDocument(docDefinition);
             file.path = path.join(publicDir, `${fileName}.pdf`);
             file.name = `${fileName}.pdf`;
-            const writeStream = fs.createWriteStream(file.path);
-            pdfDoc.pipe(writeStream);
-            pdfDoc.on('end', () => {
+            if (fs.existsSync(file.path)) {
+                console.log('PDF report already exists.');
+                const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
+                res.json({ fileUrl });
+            } else {
+                const writeStream = fs.createWriteStream(file.path);
+                pdfDoc.pipe(writeStream);
+                pdfDoc.on('end', () => {
+                    const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
+                    console.log(`File path: ${file.path}`); // Log the file path
+                    console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
+                    res.json({ fileUrl });
+                });
+                pdfDoc.end();
+            }
+        } else if (format === 'HTML') {
+            // Define Pug template
+            const template = `
+doctype html
+html
+  head
+    title Report
+  body
+    h1 Report
+    p Percentage of Pages With Errors: #{percentComErros}%
+    p Percentage of Pages With A-Level Errors: #{percentComErrosA}%
+    p Percentage of Pages With AA-Level Errors: #{percentComErrosAA}%
+    p Percentage of Pages With AAA-Level Errors: #{percentComErrosAAA}%
+    h2 Top 10 Errors
+    ol
+      each error in top10Errors
+        li #{error[0]}: #{error[1]}
+`;
+
+            // Generate HTML report
+            const html = pug.render(template, reportData, { pretty: true });
+            file.path = path.join(publicDir, `${fileName}.html`);
+            file.name = `${fileName}.html`;
+            // Check if the file already exists
+            if (fs.existsSync(file.path)) {
+                console.log('HTML report already exists.');
+                const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
+                res.json({ fileUrl });
+            } else {
+                fs.writeFileSync(file.path, html);
                 const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
                 console.log(`File path: ${file.path}`); // Log the file path
                 console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
                 res.json({ fileUrl });
-            });
-            pdfDoc.end();
-        } else if (format === 'HTML') {
-            // Generate HTML report
-            const html = pug.renderFile('/path/to/template.pug', reportData);
-            file.path = path.join(publicDir, `${fileName}.html`);
-            file.name = `${fileName}.html`;
-            fs.writeFileSync(file.path, html);
-            const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
-            console.log(`File path: ${file.path}`); // Log the file path
-            console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
-            res.json({ fileUrl });
+            }
         }
     } catch (err) {
         console.error(err);
