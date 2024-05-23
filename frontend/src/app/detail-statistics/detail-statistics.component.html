@@ -33,10 +33,10 @@
     </div>
 
     <div class="test-results">
-        <p>Total tests passed: {{totalPassedTests}}</p>
-        <p>Total tests with warning: {{totalWarningTests}}</p>
-        <p>Total tests failed: {{totalFailedTests}}</p>
-        <p>Total tests not applicable: {{totalInapplicableTest}}</p>
+      <p>Total tests passed: {{totalPassedTests}} ({{passedTestsPercentage.toFixed(2)}}%)</p>
+      <p>Total tests with warning: {{totalWarningTests}} ({{warningTestsPercentage.toFixed(2)}}%)</p>
+      <p>Total tests failed: {{totalFailedTests}} ({{failedTestsPercentage.toFixed(2)}}%)</p>
+      <p>Total tests not applicable: {{totalInapplicableTest}} ({{inapplicableTestsPercentage.toFixed(2)}}%)</p>
     </div>
 
     <div *ngIf="this.actFiltered">

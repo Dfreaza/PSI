@@ -27,6 +27,11 @@ export class DetailStatisticsComponent {
   totalFailedTests: number = 0;
   totalInapplicableTest: number = 0;
 
+  passedTestsPercentage: number = 0;
+warningTestsPercentage: number = 0;
+failedTestsPercentage: number = 0;
+inapplicableTestsPercentage: number = 0;
+
   actRulesTestsResults: any[] = [];
   wcagTestsResults: any[] = [];
 
@@ -122,6 +127,13 @@ constructor(private route: ActivatedRoute, private websiteService: WebsiteServic
     this.totalInapplicableTest = data[0].totalInapplicableTests;
     this.actRulesTestsResults = data[0].actRulesTestsResults;
     this.wcagTestsResults = data[0].wcagTestsResults;
+
+    let totalTests = this.totalPassedTests + this.totalWarningTests + this.totalFailedTests + this.totalInapplicableTest;
+  
+    this.passedTestsPercentage = (this.totalPassedTests / totalTests) * 100;
+    this.warningTestsPercentage = (this.totalWarningTests / totalTests) * 100;
+    this.failedTestsPercentage = (this.totalFailedTests / totalTests) * 100;
+    this.inapplicableTestsPercentage = (this.totalInapplicableTest / totalTests) * 100;
   });
  }
 
