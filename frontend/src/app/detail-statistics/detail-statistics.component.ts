@@ -15,6 +15,8 @@ export class DetailStatisticsComponent {
   totalWarningTests: number = 0;
   totalFailedTests: number = 0;
   totalInapplicableTest: number = 0;
+  actRulesTestsResults: any[] = [];
+  wcagTestsResults: any[] = [];
 
   website = {} as IWebsite;
   page = {} as IPage;
@@ -40,6 +42,8 @@ constructor(private route: ActivatedRoute, private websiteService: WebsiteServic
     this.totalWarningTests = data[0].totalWarningTests;
     this.totalFailedTests = data[0].totalFailedTests;
     this.totalInapplicableTest = data[0].totalInapplicableTests;
+    this.actRulesTestsResults = data[0].actRulesTestsResults;
+    this.wcagTestsResults = data[0].wcagTestsResults;
   });
 
  }

@@ -97,6 +97,8 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
         let warningTests = 0;
         let failedTests = 0;
         let inapplicableTests = 0;
+        let actRulesTestsResults = [];
+        let wcagTestsResults = [];
 
         const page = website.pages.find(page => page.url === pageObject.url);
 
@@ -136,8 +138,10 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             for (const moduleName of Object.keys(modules)) {
                 // Skip the 'best-practices' module
                 if (moduleName === 'best-practices') {
+                    console.log('Skipping best-practices module');
                     continue;
                 }
+
                 const module = report[page.url].modules[moduleName];
                 //console.log("Ver os erros ", module.metadata.failed);
 
@@ -145,12 +149,20 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                 warningTests += module.metadata.warning;
                 failedTests += module.metadata.failed;
                 inapplicableTests += module.metadata.inapplicable;
+                
 
                 // Check if module.assertions is iterable
                 if (module.assertions && typeof module.assertions === 'object') {
                     // Iterate over the properties of module.assertions
                     for (const assertionName of Object.keys(module.assertions)) {
                         const assertion = module.assertions[assertionName];
+                        if(moduleName === 'act-rules'){
+                            actRulesTestsResults.push(assertion.code);
+                        }
+                        if(moduleName === 'wcag-techniques'){
+                            wcagTestsResults.push(assertion.code);
+                        }
+
                         if (assertion.metadata.outcome === 'failed') {
 
                             errors.push(assertion);
@@ -193,6 +205,8 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             totalWarningTests: warningTests,
             totalFailedTests: failedTests,
             totalInapplicableTests: inapplicableTests,
+            actRulesTestsResults: actRulesTestsResults,
+            wcagTestsResults: wcagTestsResults,
         });
 
         // Save the Statistics object to the database
@@ -233,7 +247,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
             status: page.status,
         };
         const updatedPageData = await updatePageData(website._id, page._id, updatedData);
-        console.log('Updated page data:', updatedPageData);
+        //console.log('Updated page data:', updatedPageData);
 
         return report;
     }

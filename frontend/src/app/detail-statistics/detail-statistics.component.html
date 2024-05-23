@@ -8,6 +8,18 @@
     <p>Total tests failed: {{totalFailedTests}}</p>
     <p>Total tests not applicable: {{totalInapplicableTest}}</p>
 
+    <div class="chart-container">
+        <h3>ACT Rules Test Results</h3>
+        <ul>
+          <li *ngFor="let result of actRulesTestsResults">
+            {{result}}
+          </li>
+          <li *ngFor="let result2 of wcagTestsResults">
+            {{result2}}
+          </li>
+        </ul>
+    </div>
+
 
 
 

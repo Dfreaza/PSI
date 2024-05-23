@@ -15,7 +15,8 @@ const DetailStatisticsSchema = new mongoose.Schema({
   totalWarningTests: Number,
   totalFailedTests: Number,
   totalInapplicableTests: Number,
-  //TestsResults: [String],
+  actRulesTestsResults: [String],
+  wcagTestsResults: [String],
 });
 
 const DetailStatistics = mongoose.model('DetailStatistics', DetailStatisticsSchema);
