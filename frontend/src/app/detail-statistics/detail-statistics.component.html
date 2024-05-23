@@ -3,31 +3,31 @@
     <div id="filter-container">
       <div id="outcome">
         <h3>Outcome</h3>
-        <input type="checkbox" name="Passed" >
+        <input type="checkbox" name="Passed" (click)="filterTests('passed')" checked>
         <label for="Passed">Passed</label><br>
-        <input type="checkbox" name="Failed">
+        <input type="checkbox" name="Failed" (click)="filterTests('failed')" checked>
         <label for="Failed">Failed</label><br>
-        <input type="checkbox" name="Warning">
+        <input type="checkbox" name="Warning" (click)="filterTests('warning')" checked>
         <label for="Warning">Warning</label><br>
-        <input type="checkbox" name="Not applicable">
+        <input type="checkbox" name="Not applicable" (click)="filterTests('not applicable')">
         <label for="Not applicable">Not applicable</label>
       </div>
 
       <div id="rules">
         <h3>Rules</h3>
-        <input type="checkbox" ng-checked="all" name="CWAG rules" (click)="filterTests('cwagFiltered')">
+        <input type="checkbox" ng-checked="all" name="CWAG rules" (click)="filterTests('cwagFiltered')" checked>
         <label for="CWAG rules">CWAG rules</label><br>
-        <input type="checkbox" ng-checked="all" name="Act rules" (click)="filterTests('actFiltered')">
+        <input type="checkbox" ng-checked="all" name="Act rules" (click)="filterTests('actFiltered')" checked>
         <label for="Act rules">Act rules</label>
       </div>
 
       <div id="level">
         <h3>Level</h3>
-        <input type="checkbox" name="AAA">
+        <input type="checkbox" name="AAA" (click)="filterTests('levelaaa')" checked>
         <label for="AAA">AAA</label><br>
-        <input type="checkbox" name="AA">
+        <input type="checkbox" name="AA" (click)="filterTests('levelaa')" checked>
         <label for="AA">AA</label><br>
-        <input type="checkbox" name="A">
+        <input type="checkbox" name="A" (click)="filterTests('levela')"checked>
         <label for="A">A</label>
       </div>
     </div>
@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="this.actFiltered">
-      <div *ngFor="let result of actRulesTestsResults" class="result-card">
+      <div *ngFor="let result of filterRest(actRulesTestsResults)" class="result-card">
           <h4>{{result.name}}</h4>
           <p>
               <strong>Code:</strong> {{result.code}}<br>
@@ -52,7 +52,7 @@
     </div>
 
     <div *ngIf="this.cwagFiltered">
-      <div *ngFor="let result of wcagTestsResults" class="result-card">
+      <div *ngFor="let result of filterRest(wcagTestsResults)" class="result-card">
           <h4>{{result.name}}</h4>
           <p>
               <strong>Code:</strong> {{result.code}}<br>
