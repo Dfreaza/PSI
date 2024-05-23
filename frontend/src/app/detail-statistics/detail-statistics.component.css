@@ -1,0 +1,31 @@
+
+.center-content {
+    text-align: center;
+}
+
+.test-results {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 2em;
+}
+
+.test-results p {
+    border: 1px solid #3F51B5;
+    padding: 1em;
+    border-radius: 5px;
+    width: 20%;
+    min-width: 200px;
+}
+
+.result-card {
+    border: 1px solid #3F51B5;
+    border-radius: 5px;
+    margin: 1em;
+    padding: 1em;
+    min-width: 200px;
+}
+
+.result-card h5 {
+    margin-top: 0;
+}

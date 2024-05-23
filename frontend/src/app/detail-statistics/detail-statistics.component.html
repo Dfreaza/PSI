@@ -1,26 +1,30 @@
-
-<div class= center-content>
-
+<div class="center-content">
     <h2>Pagina: {{page.url}}</h2>
 
-    <p>Total tests passed: {{totalPassedTests}}</p>
-    <p>Total tests with warning: {{totalWarningTests}}</p>
-    <p>Total tests failed: {{totalFailedTests}}</p>
-    <p>Total tests not applicable: {{totalInapplicableTest}}</p>
-
-    <div class="chart-container">
-        <h3>ACT Rules Test Results</h3>
-        <ul>
-          <li *ngFor="let result of actRulesTestsResults">
-            {{result}}
-          </li>
-          <li *ngFor="let result2 of wcagTestsResults">
-            {{result2}}
-          </li>
-        </ul>
+    <div class="test-results">
+        <p>Total tests passed: {{totalPassedTests}}</p>
+        <p>Total tests with warning: {{totalWarningTests}}</p>
+        <p>Total tests failed: {{totalFailedTests}}</p>
+        <p>Total tests not applicable: {{totalInapplicableTest}}</p>
     </div>
 
+    <div *ngFor="let result of actRulesTestsResults" class="result-card">
+        <h4>{{result.name}}</h4>
+        <p>
+            <strong>Code:</strong> {{result.code}}<br>
+            <strong>Description:</strong> {{result.description}}<br>
+            <strong>Outcome:</strong> {{result.outcome}}<br>
+            <strong>Success Criteria:</strong> {{result.successCriteria}}
+        </p>
+    </div>
 
-
-
+    <div *ngFor="let result of wcagTestsResults" class="result-card">
+        <h4>{{result.name}}</h4>
+        <p>
+            <strong>Code:</strong> {{result.code}}<br>
+            <strong>Description:</strong> {{result.description}}<br>
+            <strong>Outcome:</strong> {{result.outcome}}<br>
+            <strong>Success Criteria:</strong> {{result.successCriteria}}
+        </p>
+    </div>
 </div>
