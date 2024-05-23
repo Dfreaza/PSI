@@ -156,11 +156,20 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                     // Iterate over the properties of module.assertions
                     for (const assertionName of Object.keys(module.assertions)) {
                         const assertion = module.assertions[assertionName];
+
+                        const qualwebInfo = new QualwebInfo({
+                            name: assertion.name,
+                            code: assertion.code,
+                            description: assertion.description,
+                            outcome: assertion.metadata.outcome,
+                            successCriteria: assertion.metadata['success-criteria'],
+                        });
+
                         if(moduleName === 'act-rules'){
-                            actRulesTestsResults.push(assertion.code);
+                            actRulesTestsResults.push(qualwebInfo);
                         }
                         if(moduleName === 'wcag-techniques'){
-                            wcagTestsResults.push(assertion.code);
+                            wcagTestsResults.push(qualwebInfo);
                         }
 
                         if (assertion.metadata.outcome === 'failed') {
