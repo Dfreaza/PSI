@@ -66,29 +66,38 @@ export class DetailStatisticsComponent {
   }
   filterRest(list: any[]){
     let results: any[] = [];
+  
     for(let res of list){
-      if(!results.includes(res) && this.passed && res.outcome == "passed"){
-        results.push(res);
+      let shouldAdd = false;
+  
+      switch(res.outcome) {
+        case "passed":
+          shouldAdd = this.passed;
+          break;
+        case "failed":
+          shouldAdd = this.failed;
+          break;
+        case "warning":
+          shouldAdd = this.warning;
+          break;
+        case "inapplicable":
+          shouldAdd = this.inapplicable;
+          break;
       }
-      if(!results.includes(res) && this.failed && res.outcome == "failed"){
-        results.push(res);
+  
+      if (res.successCriteria.includes("A")) {
+        shouldAdd = shouldAdd && this.levela;
+      } else if (res.successCriteria.includes("AA")) {
+        shouldAdd = shouldAdd && this.levelaa;
+      } else if (res.successCriteria.includes("AAA")) {
+        shouldAdd = shouldAdd && this.levelaaa;
       }
-      if(!results.includes(res) && this.warning && res.outcome == "warning"){
-        results.push(res);
-      }
-      if(!results.includes(res) && this.inapplicable && res.outcome == "inapplicable"){
-        results.push(res);
-      }
-      if(this.levela && !results.includes(res) && res.successCriteria.includes("A")){
-        results.push(res);
-      }
-      else if(this.levelaa && !results.includes(res) && res.successCriteria.includes("AA")){
-        results.push(res);
-      }
-      else if(this.levelaaa && !results.includes(res) && res.successCriteria.includes("AAA")){
+  
+      if (shouldAdd) {
         results.push(res);
       }
     }
+  
     return results;
   }
 
