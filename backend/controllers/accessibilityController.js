@@ -166,15 +166,26 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                             for (let criteria of assertion.metadata['success-criteria']) {
                                 let level = criteria.level;
                                 if (level === 'A') {
-                                    levels.push('A');
                                     hasErrorsA = true;
                                 } else if (level === 'AA') {
-                                    levels.push('AA');
                                     hasErrorsAA = true;
                                 } else if (level === 'AAA') {
-                                    levels.push('AAA');
                                     hasErrorsAAA = true;
                                 }
+                            }
+                        }
+
+                        for (let criteria of assertion.metadata['success-criteria']) {
+                            let level = criteria.level;
+                            if (level === 'A') {
+                                levels.push('A');
+                                hasErrorsA = true;
+                            } else if (level === 'AA') {
+                                levels.push('AA');
+                                hasErrorsAA = true;
+                            } else if (level === 'AAA') {
+                                levels.push('AAA');
+                                hasErrorsAAA = true;
                             }
                         }
 
