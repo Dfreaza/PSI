@@ -10,7 +10,17 @@ import { IPage } from '../page';
   styleUrls: ['./detail-statistics.component.css']
 })
 export class DetailStatisticsComponent {
-
+  filterTests(s: string) {
+    if(s === 'cwagFiltered'){
+      this.cwagFiltered = !this.cwagFiltered;
+    }
+    else if (s === 'actFiltered'){
+      this.actFiltered = !this.actFiltered;
+    }
+    console.log(this.actFiltered);
+  }
+  cwagFiltered: boolean = true;
+  actFiltered: boolean = true;
   totalPassedTests: number = 0;
   totalWarningTests: number = 0;
   totalFailedTests: number = 0;
@@ -21,9 +31,7 @@ export class DetailStatisticsComponent {
   website = {} as IWebsite;
   page = {} as IPage;
 
-constructor(private route: ActivatedRoute, private websiteService: WebsiteService) {
-  
-}
+constructor(private route: ActivatedRoute, private websiteService: WebsiteService) {}
 
  ngOnInit(): void {
   const websiteId = this.route.snapshot.paramMap.get('websiteId')!;
@@ -45,7 +53,8 @@ constructor(private route: ActivatedRoute, private websiteService: WebsiteServic
     this.actRulesTestsResults = data[0].actRulesTestsResults;
     this.wcagTestsResults = data[0].wcagTestsResults;
   });
-
  }
 
 }
+
+

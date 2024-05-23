@@ -1,5 +1,36 @@
 <div class="center-content">
     <h2>Pagina: {{page.url}}</h2>
+    <div id="filter-container">
+      <div id="outcome">
+        <h3>Outcome</h3>
+        <input type="checkbox" name="Passed" >
+        <label for="Passed">Passed</label><br>
+        <input type="checkbox" name="Failed">
+        <label for="Failed">Failed</label><br>
+        <input type="checkbox" name="Warning">
+        <label for="Warning">Warning</label><br>
+        <input type="checkbox" name="Not applicable">
+        <label for="Not applicable">Not applicable</label>
+      </div>
+
+      <div id="rules">
+        <h3>Rules</h3>
+        <input type="checkbox" ng-checked="all" name="CWAG rules" (click)="filterTests('cwagFiltered')">
+        <label for="CWAG rules">CWAG rules</label><br>
+        <input type="checkbox" ng-checked="all" name="Act rules" (click)="filterTests('actFiltered')">
+        <label for="Act rules">Act rules</label>
+      </div>
+
+      <div id="level">
+        <h3>Level</h3>
+        <input type="checkbox" name="AAA">
+        <label for="AAA">AAA</label><br>
+        <input type="checkbox" name="AA">
+        <label for="AA">AA</label><br>
+        <input type="checkbox" name="A">
+        <label for="A">A</label>
+      </div>
+    </div>
 
     <div class="test-results">
         <p>Total tests passed: {{totalPassedTests}}</p>
@@ -8,23 +39,27 @@
         <p>Total tests not applicable: {{totalInapplicableTest}}</p>
     </div>
 
-    <div *ngFor="let result of actRulesTestsResults" class="result-card">
-        <h4>{{result.name}}</h4>
-        <p>
-            <strong>Code:</strong> {{result.code}}<br>
-            <strong>Description:</strong> {{result.description}}<br>
-            <strong>Outcome:</strong> {{result.outcome}}<br>
-            <strong>Success Criteria:</strong> {{result.successCriteria}}
-        </p>
+    <div *ngIf="this.actFiltered">
+      <div *ngFor="let result of actRulesTestsResults" class="result-card">
+          <h4>{{result.name}}</h4>
+          <p>
+              <strong>Code:</strong> {{result.code}}<br>
+              <strong>Description:</strong> {{result.description}}<br>
+              <strong>Outcome:</strong> {{result.outcome}}<br>
+              <strong>Success Criteria:</strong> {{result.successCriteria}}
+          </p>
+      </div>
     </div>
 
-    <div *ngFor="let result of wcagTestsResults" class="result-card">
-        <h4>{{result.name}}</h4>
-        <p>
-            <strong>Code:</strong> {{result.code}}<br>
-            <strong>Description:</strong> {{result.description}}<br>
-            <strong>Outcome:</strong> {{result.outcome}}<br>
-            <strong>Success Criteria:</strong> {{result.successCriteria}}
-        </p>
+    <div *ngIf="this.cwagFiltered">
+      <div *ngFor="let result of wcagTestsResults" class="result-card">
+          <h4>{{result.name}}</h4>
+          <p>
+              <strong>Code:</strong> {{result.code}}<br>
+              <strong>Description:</strong> {{result.description}}<br>
+              <strong>Outcome:</strong> {{result.outcome}}<br>
+              <strong>Success Criteria:</strong> {{result.successCriteria}}
+          </p>
+      </div>
     </div>
 </div>

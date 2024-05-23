@@ -28,4 +28,8 @@
 
 .result-card h5 {
     margin-top: 0;
+    
+}#filter-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
