@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 
+const QualwebInfoSchema = new mongoose.Schema({
+  name: String,
+  code: String,
+  description: String,
+  outcome: String,
+  successCriteria: [String],
+})
+
 const DetailStatisticsSchema = new mongoose.Schema({
     idWebsite: {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,10 +23,8 @@ const DetailStatisticsSchema = new mongoose.Schema({
   totalWarningTests: Number,
   totalFailedTests: Number,
   totalInapplicableTests: Number,
-  actRulesTestsResults: [qualwebInfoSchema],
-  wcagTestsResults: [qualwebInfoSchema],
+  actRulesTestsResults: [QualwebInfoSchema],
+  wcagTestsResults: [QualwebInfoSchema],
 });
 
-const DetailStatistics = mongoose.model('DetailStatistics', DetailStatisticsSchema);
-
-module.exports = DetailStatistics;
+module.exports = mongoose.model('DetailStatistics', DetailStatisticsSchema);

@@ -156,21 +156,7 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                     // Iterate over the properties of module.assertions
                     for (const assertionName of Object.keys(module.assertions)) {
                         const assertion = module.assertions[assertionName];
-
-                        const qualwebInfo = new QualwebInfo({
-                            name: assertion.name,
-                            code: assertion.code,
-                            description: assertion.description,
-                            outcome: assertion.metadata.outcome,
-                            successCriteria: assertion.metadata['success-criteria'],
-                        });
-
-                        if(moduleName === 'act-rules'){
-                            actRulesTestsResults.push(qualwebInfo);
-                        }
-                        if(moduleName === 'wcag-techniques'){
-                            wcagTestsResults.push(qualwebInfo);
-                        }
+                        let levels = [];
 
                         if (assertion.metadata.outcome === 'failed') {
 
@@ -180,15 +166,33 @@ exports.evaluateWebsiteAccessibility = async (req, res) => {
                             for (let criteria of assertion.metadata['success-criteria']) {
                                 let level = criteria.level;
                                 if (level === 'A') {
+                                    levels.push('A');
                                     hasErrorsA = true;
                                 } else if (level === 'AA') {
+                                    levels.push('AA');
                                     hasErrorsAA = true;
                                 } else if (level === 'AAA') {
+                                    levels.push('AAA');
                                     hasErrorsAAA = true;
                                 }
                             }
-
                         }
+
+                        const qualwebInfo = {
+                            name: assertion.name,
+                            code: assertion.code,
+                            description: assertion.description,
+                            outcome: assertion.metadata.outcome,
+                            successCriteria: levels,
+                          };
+
+                        if(moduleName === 'act-rules'){
+                            actRulesTestsResults.push(qualwebInfo);
+                        }
+                        if(moduleName === 'wcag-techniques'){
+                            wcagTestsResults.push(qualwebInfo);
+                        }
+
                     }
                 } else {
                     console.log(`module.assertions is not iterable for module ${moduleName}`);
