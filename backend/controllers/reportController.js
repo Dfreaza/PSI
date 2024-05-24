@@ -1,5 +1,3 @@
-// reportController.js
-
 const express = require('express');
 const Report = require('../models/report'); // Import the Report model
 const fs = require('fs');
@@ -29,8 +27,12 @@ exports.generateReport = async (req, res) => {
         return;
     }
 
-    // Use the website name or URL to create a unique file name
-    const fileName = `${website.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_report`;
+    // Use the website name or URL to create a base file name
+    const baseFileName = `${website.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_report`;
+
+    // Append the current timestamp to create a unique file name
+    const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
+    const fileName = `${baseFileName}_${timestamp}`;
 
     // Check if the public directory exists and create it if it doesn't
     const publicDir = path.join(__dirname, '..', 'public');
@@ -84,21 +86,16 @@ exports.generateReport = async (req, res) => {
             const pdfDoc = printer.createPdfKitDocument(docDefinition);
             file.path = path.join(publicDir, `${fileName}.pdf`);
             file.name = `${fileName}.pdf`;
-            if (fs.existsSync(file.path)) {
-                console.log('PDF report already exists.');
+
+            const writeStream = fs.createWriteStream(file.path);
+            pdfDoc.pipe(writeStream);
+            pdfDoc.on('end', () => {
                 const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
+                console.log(`File path: ${file.path}`); // Log the file path
+                console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
                 res.json({ fileUrl });
-            } else {
-                const writeStream = fs.createWriteStream(file.path);
-                pdfDoc.pipe(writeStream);
-                pdfDoc.on('end', () => {
-                    const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
-                    console.log(`File path: ${file.path}`); // Log the file path
-                    console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
-                    res.json({ fileUrl });
-                });
-                pdfDoc.end();
-            }
+            });
+            pdfDoc.end();
         } else if (format === 'HTML') {
             // Define Pug template
             const template = `
@@ -107,7 +104,14 @@ html
   head
     title Report
   body
-    h1 Report
+    h1 Website: #{website}
+    p Number of Pages Evaluated: #{numDePaginasAvaliadas}
+    p Number of Pages Without Errors: #{numDePaginasSemErros}
+    p Number of Pages With Errors: #{numDePaginasComErros}
+    p Number of Pages With A-Level Errors: #{numDePaginasComErrosA}
+    p Number of Pages With AA-Level Errors: #{numDePaginasComErrosAA}
+    p Number of Pages With AAA-Level Errors: #{numDePaginasComErrosAAA}
+    p Percentage of Pages Without Errors: #{percentSemErros}%
     p Percentage of Pages With Errors: #{percentComErros}%
     p Percentage of Pages With A-Level Errors: #{percentComErrosA}%
     p Percentage of Pages With AA-Level Errors: #{percentComErrosAA}%
@@ -122,18 +126,12 @@ html
             const html = pug.render(template, reportData, { pretty: true });
             file.path = path.join(publicDir, `${fileName}.html`);
             file.name = `${fileName}.html`;
-            // Check if the file already exists
-            if (fs.existsSync(file.path)) {
-                console.log('HTML report already exists.');
-                const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
-                res.json({ fileUrl });
-            } else {
-                fs.writeFileSync(file.path, html);
-                const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
-                console.log(`File path: ${file.path}`); // Log the file path
-                console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
-                res.json({ fileUrl });
-            }
+
+            fs.writeFileSync(file.path, html);
+            const fileUrl = `${req.protocol}://${req.get('host')}/public/${file.name}`;
+            console.log(`File path: ${file.path}`); // Log the file path
+            console.log(`File exists: ${fs.existsSync(file.path)}`); // Check if the file exists
+            res.json({ fileUrl });
         }
     } catch (err) {
         console.error(err);
