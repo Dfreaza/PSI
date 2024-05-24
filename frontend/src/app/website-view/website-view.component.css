@@ -1,72 +1,99 @@
+/* styles-page3.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
 body {
     font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #FAFAFA;
-}
-
-.center-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    color: #333;
+    margin: 0;
     padding: 20px;
 }
 
-.center-content strong {
+.center-content {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+strong {
+    color: #6200EE;
+    display: block;
     margin-bottom: 10px;
 }
 
 select {
-    width: 200px;
-    height: 35px;
-    background: white;
-    color: black;
-    padding-left: 5px;
-    font-size: 14px;
-    border: none;
-    margin-left: 10px;
-    border: black 1px solid;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+}
+
+select:focus {
+    border-color: #6200EE;
+    outline: none;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-table thead th {
-    background-color: #3F51B5;
-    color: white;
+th,
+td {
+    text-align: left;
     padding: 10px;
+    border-bottom: 1px solid #E0E0E0;
 }
 
-table tbody td {
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
+th {
+    background-color: #F5F5F5;
+}
+
+th button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    color: #6200EE;
+    font-size: 16px;
+}
+
+tr:nth-child(even) {
+    background-color: #F9F9F9;
+}
+
+tr:hover {
+    background-color: #E0E0E0;
 }
 
 button {
-    background-color: #3F51B5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    background-color: #6200EE;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    transition-duration: 0.4s;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin: 5px;
 }
 
 button:hover {
-    background-color: white; 
-    color: black; 
-    border: 2px solid #3F51B5;
+    background-color: #3700B3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-
-td, th {
-    border: 1px solid black;
-    text-align: center;
+button:focus {
+    outline: none;
+    background-color: #3700B3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

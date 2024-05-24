@@ -1,37 +1,35 @@
+/* styles-page1.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
 body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
+  font-family: 'Roboto', sans-serif;
   background-color: #FAFAFA;
+  color: #333;
+  margin: 0;
+  padding: 20px;
 }
 
 h1 {
-  color: #212121;
-  font-size: 2.4em;
-  font-weight: 300;
   text-align: center;
-  padding: 20px 0;
+  color: #6200EE;
+  margin-bottom: 20px;
 }
 
 nav {
-  background-color: #3F51B5;
-  padding: 15px 0px;
-  color: #FFFFFF;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 nav a {
-  color: #FFFFFF;
+  color: #6200EE;
   text-decoration: none;
-  font-size: 1.2em;
-  margin: 0 15px;
-  transition: color 0.3s ease;
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 nav a:hover {
-  color: #BBDEFB;
-}
-
-router-outlet {
-  margin: 20px;
+  background-color: #6200EE;
+  color: #FFFFFF;
 }
